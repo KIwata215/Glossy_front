@@ -23,11 +23,11 @@ doc/api/
 .flutter-plugins-dependencies
 
 # Firebase config (機密情報)
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
-macos/Runner/GoogleService-Info.plist
-firebase.json
-lib/firebase_options.dart  # 自動生成される場合
+glossy/android/app/google-services.json
+glossy/ios/Runner/GoogleService-Info.plist
+glossy/macos/Runner/GoogleService-Info.plist
+glossy/firebase.json
+glossy/lib/firebase_options.dart
 
 # Xcode
 *.xcworkspace
@@ -36,23 +36,23 @@ xcuserdata/
 *.xcodeproj/project.xcworkspace/
 
 # Pods
-ios/Pods/
-macos/Pods/
+glossy/ios/Pods/
+glossy/macos/Pods/
 
 # Generated plugin registrants
-ios/Flutter/GeneratedPluginRegistrant.*
-macos/Flutter/GeneratedPluginRegistrant.*
+glossy/ios/Flutter/GeneratedPluginRegistrant.*
+glossy/macos/Flutter/GeneratedPluginRegistrant.*
 
 # Windows
-windows/flutter/generated_plugin_registrant.*
+glossy/windows/flutter/generated_plugin_registrant.*
 
 # Android build outputs
-android/app/build/
-android/build/
+glossy/android/app/build/
+glossy/android/build/
 
 # macOS build outputs
-macos/Flutter/Flutter-*.xcconfig
-macos/build/
+glossy/macos/Flutter/Flutter-*.xcconfig
+glossy/macos/build/
 
 # VS Code / IDE
 .vscode/
