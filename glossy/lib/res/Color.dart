@@ -7,4 +7,5 @@ class AppColors{
   //メインカラーの薄紫
   static const Color custompurple = Color(0xFFE3D0E2);
   static const Color customblack = Color(0xFF000000);
+  static const Color customblue = Color(0xFF353B47);
 }
