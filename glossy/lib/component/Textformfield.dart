@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/res/Color.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Username_Textformfield extends StatefulWidget{
   final TextEditingController controller;
@@ -62,9 +63,10 @@ class _Email_Textformfield extends State<Email_Textformfield>{
         children: [
           Text(
             widget.labelText,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: AppColors.customblack,
-              fontSize: 12.sp,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 2.h),
@@ -85,6 +87,79 @@ class _Email_Textformfield extends State<Email_Textformfield>{
     );
   }
 }
+
+class Password_Textformfield extends StatefulWidget{
+  final TextEditingController controller;
+  final String labelText;
+  final double width;
+
+  Password_Textformfield({required this.controller, required this.labelText, required this.width,});
+
+  @override
+  _Password_Textformfield createState() => _Password_Textformfield();
+}
+class _Password_Textformfield extends State<Password_Textformfield>{
+  String? password; 
+  void setPassword (String password) {
+    this.password = password;
+  }
+  @override
+  Widget build(BuildContext context){
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.labelText,
+            style: GoogleFonts.poppins(
+              color: AppColors.customblack,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.bold
+            ),
+            
+          ),
+          SizedBox(height: 2.h),
+          Container(
+            width: widget.width,
+            child: Column(
+              children: [
+                TextFormField(
+                  obscureText: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: ValidateText.password,
+                  controller: widget.controller,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+                //パスワードを忘れた場合
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      //パスワードリセット画面へ遷移
+                    },
+                    child: Text(
+                      'パスワードを忘れた場合',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.customblue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                        // decoration: TextDecoration.underline
+                      ),
+                    ),
+                  ),
+                ),     
+              ],
+            ),
+          ),
+        ],
+    );
+  }
+}
+
+
 
 class ValidateText {
   static String? password(String? value){
