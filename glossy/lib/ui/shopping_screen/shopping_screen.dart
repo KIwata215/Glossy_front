@@ -11,11 +11,47 @@ class ShoppingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 検索バー（コンポーネント化）
+            // 検索バーとハートアイコンを横並びに配置
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Center(
-                child: custom.SearchBar(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 検索バーを中央寄せ
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: custom.SearchBar(),
+                    ),
+                  ),
+                  // ハートアイコンと「お気に入り」文字
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 16.0),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // favorite_screen.dart へ遷移
+                            Navigator.pushNamed(context, '/favorite');
+                          },
+                          child: Icon(
+                            Icons.favorite_border, // 縁のみ
+                            color: const Color(0xFFA674A4),
+                            size: 30, // 小さめ
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        const Text(
+                          'お気に入り',
+                          style: TextStyle(
+                            fontSize: 10, // 小さめ
+                            color: Color(0xFFA674A4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
 
