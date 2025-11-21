@@ -12,7 +12,7 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor = const Color(0xFF2B2B2B),
     this.titleText = "新規投稿",
     this.rightText = "次へ",
-    this.textColor = AppColors.customgreen,
+    this.textColor = AppColors.custompurple,
     this.onRightTap,
   });
 
