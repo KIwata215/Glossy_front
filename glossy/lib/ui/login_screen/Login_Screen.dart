@@ -9,6 +9,7 @@ class LoginScreen extends StatefulWidget{
 
 class _LoginScreenState extends State<LoginScreen>{
   final TextEditingController email_controller = TextEditingController();
+  final TextEditingController password_controller = TextEditingController();
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -81,6 +82,12 @@ class _LoginScreenState extends State<LoginScreen>{
                   controller: email_controller, 
                   labelText: "メールアドレス", 
                   width: 300.w, 
+                ),
+                SizedBox(height: 10.h),
+                Password_Textformfield(
+                  controller:password_controller, 
+                  labelText: "パスワード", 
+                  width: 300.w
                 ),
               ],
             )
