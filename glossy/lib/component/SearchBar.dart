@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchBar extends StatelessWidget {
   final TextEditingController? controller;
@@ -15,11 +16,11 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 45,
+      width: 300.w,
+      
       decoration: BoxDecoration(
-        color: const Color(0xFF949494),
-        borderRadius: BorderRadius.circular(8.0),
+        color: const Color(0xFFEEEEEE), // 色をさらに薄く
+        borderRadius: BorderRadius.circular(22.5), // 丸みを最大に
       ),
       alignment: Alignment.center,
       child: TextField(
@@ -27,9 +28,9 @@ class SearchBar extends StatelessWidget {
         onChanged: onChanged,
         style: const TextStyle(
           fontSize: 24,
-          color: Color(0xFF989898),
+          color: Color(0xFF333333), // 入力文字を見やすい濃いグレーに
         ),
-        cursorColor: const Color(0xFF989898),
+        cursorColor: const Color(0xFF333333),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
           isCollapsed: true,
