@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/res/Color.dart';
@@ -146,7 +145,6 @@ class _Password_Textformfield extends State<Password_Textformfield>{
                         color: AppColors.customblue,
                         fontWeight: FontWeight.bold,
                         fontSize: 15.sp,
-                        // decoration: TextDecoration.underline
                       ),
                     ),
                   ),
