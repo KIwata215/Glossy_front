@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glossy/component/Button.dart';
 import 'package:glossy/component/Textformfield.dart';
 import 'package:glossy/res/Color.dart';
 
@@ -88,6 +89,66 @@ class _LoginScreenState extends State<LoginScreen>{
                   controller:password_controller, 
                   labelText: "パスワード", 
                   width: 300.w
+                ),
+                SizedBox(height: 5.h),
+                //ログインボタンの呼び出し
+                LoginButton(
+                  onPressed: (){
+                    //⭐︎Todo　ログイン処理
+                  },
+                ),
+                SizedBox(height: 15.h),
+                //OR
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 1, 
+                        color: Colors.grey,
+                        indent: 80.w,
+                      )
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'or', 
+                        style: TextStyle(
+                          fontSize: 24.sp,
+                          color: Colors.grey
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        color: Colors.grey,
+                        endIndent: 80.w,
+                      )
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                GoogleLoginButton(
+                  //⭐︎Todo Googleログイン処理
+                  onPressed: (){
+                    
+                  },
+                ),
+                SizedBox(height: 20.h),
+                Text(
+                  "新規登録はこちら",
+                  style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.customgray,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                //新規登録ボタン
+                NewregistrationButton(
+                  onPressed: (){
+                    //⭐︎Todo 新規登録画面への遷移処理　
+
+                  },
                 ),
               ],
             )
