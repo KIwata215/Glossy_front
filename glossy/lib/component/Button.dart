@@ -13,21 +13,33 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        backgroundColor: AppColors.customgreen,
-        minimumSize: Size(250.w,50.h), 
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.r),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5.r,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+        ]
       ),
-      child: Text(
-        "ログイン",
-        style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24.sp,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: AppColors.customgreen,
+          minimumSize: Size(250.w,50.h), 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.r),
+          ),
+        ),
+        child: Text(
+          "ログイン",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.sp,
+          ),
         ),
       ),
     );
@@ -62,9 +74,13 @@ class GoogleLoginButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
         minimumSize: Size(250.w,50.h),
+        elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
-
+          side: BorderSide(
+            color: AppColors.customgray,
+            width: 1,
+          ),
         ),
       ),
     );
@@ -81,18 +97,30 @@ class NewregistrationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        minimumSize: Size(250.w,50.h),
-        backgroundColor: AppColors.customorange,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5.r,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+        ],
       ),
-      child: Text(
-        "新規登録",
-        style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24.sp,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          minimumSize: Size(250.w,50.h),
+          backgroundColor: AppColors.customorange,
+        ),
+        child: Text(
+          "新規登録",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.sp,
+          ),
         ),
       ),
     );
