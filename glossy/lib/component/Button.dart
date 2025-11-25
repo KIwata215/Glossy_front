@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/res/Color.dart';
-
+//ログインボタン
 class LoginButton extends StatelessWidget {
   final VoidCallback onPressed;
   //コンストラクタで受け取る
@@ -33,7 +33,7 @@ class LoginButton extends StatelessWidget {
     );
   }
 }
-
+//Googleログインボタン
 class GoogleLoginButton extends StatelessWidget {
   final VoidCallback onPressed;
   //コンストラクタで受け取る
@@ -65,6 +65,34 @@ class GoogleLoginButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
 
+        ),
+      ),
+    );
+  }
+}
+//新規登録ボタン
+class NewregistrationButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  //コンストラクタで受け取る
+  const NewregistrationButton({
+    Key? key,
+    required this.onPressed,      
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        minimumSize: Size(250.w,50.h),
+        backgroundColor: AppColors.customorange,
+      ),
+      child: Text(
+        "新規登録",
+        style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24.sp,
         ),
       ),
     );
