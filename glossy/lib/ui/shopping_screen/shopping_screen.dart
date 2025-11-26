@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glossy/component/SearchBar.dart' as custom;
+import 'package:glossy/component/HairGoods.dart'; // ← 追加
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -54,7 +55,8 @@ class ShoppingScreen extends StatelessWidget {
                 ],
               ),
             ),
-
+            // ↓ここにHairGoodsSelectorを追加
+            const HairGoodsSelector(),
             // ...existing code...（ここに画面の残りの UI を追加してください）
           ],
         ),
