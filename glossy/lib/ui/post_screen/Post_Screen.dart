@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../../component/PostHeader.dart';
 import '../../res/Color.dart'; // AppColors
+import 'PostOverView_Screen.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -51,11 +52,22 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PostHeader(
+      appBar: PostHeader(
+        // ← const を削除
         backgroundColor: AppColors.customblack,
         titleText: "新規投稿",
         rightText: "次へ",
         textColor: AppColors.custompurple,
+        onRightTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PostOverViewScreen(
+                selectedMediaList: mediaList, // ← 複数画像を送る
+              ),
+            ),
+          );
+        },
       ),
 
       body: Column(
