@@ -5,11 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Username_Textformfield extends StatefulWidget{
   final TextEditingController controller;
-  final String labelText;
   final double width;
-  final double height;
 
-  Username_Textformfield({required this.controller, required this.labelText, required this.width, required this.height});
+  Username_Textformfield({required this.controller, required this.width,});
 
   @override
   _Username_Textformfield createState() => _Username_Textformfield();
@@ -26,13 +24,26 @@ class _Username_Textformfield extends State<Username_Textformfield>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.labelText,
+            "ユーザーネーム",
             style: TextStyle(
               color: AppColors.customblack,
               fontSize: 12.sp,
+              fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 2.h),
+          Container(
+            width: widget.width,
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: widget.controller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+              ),
+            ),
+          )
         ],
     );
   }
@@ -40,10 +51,9 @@ class _Username_Textformfield extends State<Username_Textformfield>{
 
 class Email_Textformfield extends StatefulWidget{
   final TextEditingController controller;
-  final String labelText;
   final double width;
 
-  Email_Textformfield({required this.controller, required this.labelText, required this.width,});
+  Email_Textformfield({required this.controller, required this.width,});
 
   @override
   _Email_Textformfield createState() => _Email_Textformfield();
@@ -61,7 +71,7 @@ class _Email_Textformfield extends State<Email_Textformfield>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.labelText,
+            "メールアドレス",
             style: GoogleFonts.poppins(
               color: AppColors.customblack,
               fontSize: 13.sp,
@@ -89,10 +99,9 @@ class _Email_Textformfield extends State<Email_Textformfield>{
 
 class Password_Textformfield extends StatefulWidget{
   final TextEditingController controller;
-  final String labelText;
   final double width;
 
-  Password_Textformfield({required this.controller, required this.labelText, required this.width,});
+  Password_Textformfield({required this.controller,required this.width,});
 
   @override
   _Password_Textformfield createState() => _Password_Textformfield();
@@ -108,7 +117,7 @@ class _Password_Textformfield extends State<Password_Textformfield>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.labelText,
+            "パスワード",
             style: GoogleFonts.poppins(
               color: AppColors.customblack,
               fontSize: 13.sp,
@@ -139,6 +148,7 @@ class _Password_Textformfield extends State<Password_Textformfield>{
                     onPressed: () {
                       //パスワードリセット画面へ遷移
                     },
+                    
                     child: Text(
                       'パスワードを忘れた場合',
                       style: GoogleFonts.poppins(
