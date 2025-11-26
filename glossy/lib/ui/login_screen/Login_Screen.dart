@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/Button.dart';
 import 'package:glossy/component/Textformfield.dart';
 import 'package:glossy/res/Color.dart';
+import 'package:glossy/ui/register_screen/Register_Screen.dart';
 
 class LoginScreen extends StatefulWidget{
   State<LoginScreen> createState() => _LoginScreenState();
@@ -16,13 +17,13 @@ class _LoginScreenState extends State<LoginScreen>{
     return Scaffold(
       body: Stack(
         children: [
-          // 左上の緑の円
+         // 左上の緑の円
           Positioned(
-            top: -100.h,
-            left: -80.w,
+            top: -290.h,
+            left: -140.w,
             child: Container(
-              width: 250.w,
-              height: 250.h,
+              width: 400.w,
+              height: 400.h,
               decoration: BoxDecoration(
                 color: AppColors.customgreen,
                 shape: BoxShape.circle,
@@ -32,11 +33,11 @@ class _LoginScreenState extends State<LoginScreen>{
 
           // 右上の薄紫の円
           Positioned(
-            top: 50.h,
-            right: -40.w,
+            top: -50.h,
+            right: -100.w,
             child: Container(
-              width: 180.w,
-              height: 180.w,
+              width: 200.w,
+              height: 200.w,
               decoration: BoxDecoration(
                 color: AppColors.custompurple,
                 shape: BoxShape.circle,
@@ -46,11 +47,11 @@ class _LoginScreenState extends State<LoginScreen>{
 
           // 右下の緑の円
           Positioned(
-            bottom: -60.h,
-            right: -40.w,
+            bottom: -250.h,
+            right: -250.w,
             child: Container(
-              width: 240.w,
-              height: 240.w,
+              width: 400.w,
+              height: 400.w,
               decoration: BoxDecoration(
                 color: AppColors.customgreen,
                 shape: BoxShape.circle,
@@ -59,11 +60,11 @@ class _LoginScreenState extends State<LoginScreen>{
           ),
           // 左下の薄紫の円
           Positioned(
-            bottom: -60.h,
-            left: -40.w,
+            bottom: -100.h,
+            left: -100.w,
             child: Container(
-              width: 180.w,
-              height: 180.w,
+              width: 200.w,
+              height: 200.w,
               decoration: BoxDecoration(
                 color: AppColors.custompurple,
                 shape: BoxShape.circle,
@@ -73,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen>{
           Center(
             child: Column(
               children: [
-                SizedBox(height: 125.h),
+                SizedBox(height: 100.h),
                 Image.asset(
                   'assets/images/glossy_logo.png',
                 ),
@@ -81,13 +82,12 @@ class _LoginScreenState extends State<LoginScreen>{
                 //Email_Textformfieldの呼び出し
                 Email_Textformfield(
                   controller: email_controller, 
-                  labelText: "メールアドレス", 
                   width: 300.w, 
                 ),
                 SizedBox(height: 10.h),
                 Password_Textformfield(
                   controller:password_controller, 
-                  labelText: "パスワード", 
+
                   width: 300.w
                 ),
                 SizedBox(height: 5.h),
@@ -146,8 +146,12 @@ class _LoginScreenState extends State<LoginScreen>{
                 //新規登録ボタン
                 NewregistrationButton(
                   onPressed: (){
-                    //⭐︎Todo 新規登録画面への遷移処理　
-
+                    //新規登録画面への遷移
+                    Navigator.push(context, 
+                      MaterialPageRoute(
+                        builder: (context) => RegisterScreen(),
+                      )
+                    );
                   },
                 ),
               ],
