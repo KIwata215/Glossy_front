@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen>{
         children: [
          // 左上の緑の円
           Positioned(
-            top: -290.h,
+            top: -300.h,
             left: -140.w,
             child: Container(
               width: 400.w,
@@ -73,8 +73,8 @@ class _LoginScreenState extends State<LoginScreen>{
           ),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100.h),
                 Image.asset(
                   'assets/images/glossy_logo.png',
                 ),
@@ -87,8 +87,8 @@ class _LoginScreenState extends State<LoginScreen>{
                 SizedBox(height: 10.h),
                 Password_Textformfield(
                   controller:password_controller, 
-
-                  width: 300.w
+                  width: 300.w,
+                  showForgotPassword: true,
                 ),
                 SizedBox(height: 5.h),
                 //ログインボタンの呼び出し
