@@ -71,7 +71,7 @@ class _DropdownmenuState extends State<Dropdownmenu> {
             ),
           ),
         ),
-        // ★エラーメッセージ表示
+        // エラーメッセージ表示
         if (widget.errorMessage != null)
           Padding(
             padding: EdgeInsets.only(top: 4.h, left: 4.w),
@@ -79,7 +79,7 @@ class _DropdownmenuState extends State<Dropdownmenu> {
               widget.errorMessage!,
               style: TextStyle(
                 color: Colors.red,
-                fontSize: 12.sp,
+                fontSize: 8.sp,
               ),
             ),
           ),
