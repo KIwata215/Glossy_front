@@ -126,3 +126,42 @@ class NewregistrationButton extends StatelessWidget {
     );
   }
 }
+class RegisterButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  //コンストラクタで受け取る
+  const RegisterButton({
+    Key? key,
+    required this.onPressed,      
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 5.r,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+        ],
+      ),
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          minimumSize: Size(250.w,50.h),
+          backgroundColor: AppColors.customorange,
+        ),
+        child: Text(
+          "新規登録",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.sp,
+          ),
+        ),
+      ),
+    );
+  }
+}
