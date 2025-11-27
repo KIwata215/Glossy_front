@@ -100,8 +100,9 @@ class _Email_Textformfield extends State<Email_Textformfield>{
 class Password_Textformfield extends StatefulWidget{
   final TextEditingController controller;
   final double width;
+  final bool? showForgotPassword;
 
-  Password_Textformfield({required this.controller,required this.width,});
+  Password_Textformfield({required this.controller,required this.width, this.showForgotPassword,});
 
   @override
   _Password_Textformfield createState() => _Password_Textformfield();
@@ -142,23 +143,23 @@ class _Password_Textformfield extends State<Password_Textformfield>{
                   ),
                 ),
                 //パスワードを忘れた場合
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      //パスワードリセット画面へ遷移
-                    },
-                    
-                    child: Text(
-                      'パスワードを忘れた場合',
-                      style: GoogleFonts.poppins(
-                        color: AppColors.customblue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.sp,
+                if(widget.showForgotPassword == true)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        //Todo パスワードリセット画面へ遷移
+                      },
+                      child: Text(
+                        'パスワードを忘れた場合',
+                        style: GoogleFonts.poppins(
+                          color: AppColors.customblue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.sp,
+                        ),
                       ),
                     ),
-                  ),
-                ),     
+                  ),     
               ],
             ),
           ),
