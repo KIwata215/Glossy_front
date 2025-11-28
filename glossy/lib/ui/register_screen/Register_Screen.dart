@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
            // 左上の緑の円
           Positioned(
             top: -300.h,
-            left: -140.w,
+            left: -200.w,
             child: Container(
               width: 400.w,
               height: 400.h,

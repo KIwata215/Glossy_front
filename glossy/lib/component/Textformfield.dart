@@ -35,7 +35,8 @@ class _Username_Textformfield extends State<Username_Textformfield>{
           Container(
             width: widget.width,
             child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.disabled,
+              validator: ValidateText.username,
               controller: widget.controller,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -52,8 +53,9 @@ class _Username_Textformfield extends State<Username_Textformfield>{
 class Email_Textformfield extends StatefulWidget{
   final TextEditingController controller;
   final double width;
+  final Function(String)? onChanged;
 
-  Email_Textformfield({required this.controller, required this.width,});
+  Email_Textformfield({required this.controller, required this.width, this.onChanged,});
 
   @override
   _Email_Textformfield createState() => _Email_Textformfield();
@@ -82,9 +84,10 @@ class _Email_Textformfield extends State<Email_Textformfield>{
           Container(
             width: widget.width,
             child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.disabled,
               validator: ValidateText.email,
               controller: widget.controller,
+              onChanged: widget.onChanged,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
@@ -101,8 +104,9 @@ class Password_Textformfield extends StatefulWidget{
   final TextEditingController controller;
   final double width;
   final bool? showForgotPassword;
+  final Function(String)? onChanged;
 
-  Password_Textformfield({required this.controller,required this.width, this.showForgotPassword,});
+  Password_Textformfield({required this.controller,required this.width, this.showForgotPassword, this.onChanged,});
 
   @override
   _Password_Textformfield createState() => _Password_Textformfield();
@@ -133,9 +137,10 @@ class _Password_Textformfield extends State<Password_Textformfield>{
               children: [
                 TextFormField(
                   obscureText: true,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  autovalidateMode: AutovalidateMode.disabled,
                   validator: ValidateText.password,
                   controller: widget.controller,
+                  onChanged: widget.onChanged,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.r),
@@ -148,7 +153,7 @@ class _Password_Textformfield extends State<Password_Textformfield>{
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        //Todo パスワードリセット画面へ遷移
+                        //Todoパスワードリセット画面へ遷移
                       },
                       child: Text(
                         'パスワードを忘れた場合',
@@ -169,8 +174,18 @@ class _Password_Textformfield extends State<Password_Textformfield>{
 }
 
 
-
 class ValidateText {
+
+static String? username(String? value){
+    if(value != null){
+      String pattern = r'^[a-zA-Z0-9_]{3,}$';
+      RegExp regExp = RegExp(pattern);
+      if(!regExp.hasMatch(value)){
+        return '3文字以上の英数字入力してください';
+      }
+    }
+  }
+
   static String? password(String? value){
     if(value != null){
       String pattern = r'^[a-zA-Z0-9]{6,}$';
