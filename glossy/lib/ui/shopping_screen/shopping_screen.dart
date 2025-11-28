@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glossy/component/SearchBar.dart' as custom;
-import 'package:glossy/component/HairGoods.dart'; // ← 追加
+import 'package:glossy/component/HairGoods.dart';
+import 'package:glossy/component/AppBar.dart'; // ← 追加
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -60,6 +61,13 @@ class ShoppingScreen extends StatelessWidget {
             // ...existing code...（ここに画面の残りの UI を追加してください）
           ],
         ),
+      ),
+      bottomNavigationBar: BottomAppBarCustom(
+        selectedIndex: 3, // ショッピングが選択状態
+        onTap: (index) {
+          // ページ遷移などの処理をここに記述
+          // 例: Navigator.pushReplacementNamed(context, '/your_route');
+        },
       ),
     );
   }
