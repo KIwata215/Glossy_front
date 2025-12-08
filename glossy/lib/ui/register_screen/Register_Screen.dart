@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/Button.dart';
@@ -176,17 +178,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 SizedBox(height: 20.h),
                 RegisterButton(
-                  onPressed: (){
-                    //エラーメッセージ表示
-                    setState(() {
-                      genderError = (selectedgender == null) ? '性別を選択してください' : null;
-                      hairtypeError = (selectedhairtype == null) ? '髪質を選択してください' : null;
-                      ishairdresserError = (selectedishairdresser == null) ? '選択してください' : null;
-                    });
-                    //⭐︎Todo 新規登録処理
-                    print('性別:$selectedgender');
-                    print('髪質:$selectedhairtype');
-                    print('美容師ですか？:$selectedishairdresser');
+                  onPressed: ()async{
+                    try{
+                      //メールアドレスとパスワードでユーザー登録  
+                      //⭐︎Todo 新規登録処理
+                      print('性別:$selectedgender');
+                      print('髪質:$selectedhairtype');
+                      print('美容師ですか？:$selectedishairdresser');
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      await auth.createUserWithEmailAndPassword(
+                        email: email_controller.text, 
+                        password: password_controller.text
+                      );
+                      await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen(),
+                        ),
+                      );
+                    } catch (e) {
+                      //エラー処理
+                      print('登録エラー: $e');
+                      //エラーメッセージ表示
+                      setState(() {
+                        genderError = (selectedgender == null) ? '性別を選択してください' : null;
+                        hairtypeError = (selectedhairtype == null) ? '髪質を選択してください' : null;
+                        ishairdresserError = (selectedishairdresser == null) ? '選択してください' : null;
+                      });
+                    }
                   }
                 ),    
               ]
