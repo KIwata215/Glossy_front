@@ -10,6 +10,7 @@ class LoginScreen extends StatefulWidget{
 }
 
 class _LoginScreenState extends State<LoginScreen>{
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController email_controller = TextEditingController();
   final TextEditingController password_controller = TextEditingController();
   @override
@@ -20,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen>{
          // 左上の緑の円
           Positioned(
             top: -300.h,
-            left: -140.w,
+            left: -200.w,
             child: Container(
               width: 400.w,
               height: 400.h,
@@ -72,90 +73,103 @@ class _LoginScreenState extends State<LoginScreen>{
             ),
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/glossy_logo.png',
-                ),
-                SizedBox(height: 10),
-                //Email_Textformfieldの呼び出し
-                Email_Textformfield(
-                  controller: email_controller, 
-                  width: 300.w, 
-                ),
-                SizedBox(height: 10.h),
-                Password_Textformfield(
-                  controller:password_controller, 
-                  width: 300.w,
-                  showForgotPassword: true,
-                ),
-                SizedBox(height: 5.h),
-                //ログインボタンの呼び出し
-                LoginButton(
-                  onPressed: (){
-                    //⭐︎Todo　ログイン処理
-                  },
-                ),
-                SizedBox(height: 15.h),
-                //OR
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 1, 
-                        color: Colors.grey,
-                        indent: 80.w,
-                      )
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'or', 
-                        style: TextStyle(
-                          fontSize: 24.sp,
-                          color: Colors.grey
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/glossy_logo.png',
+                  ),
+                  SizedBox(height: 10),
+                  //Email_Textformfieldの呼び出し
+                  Email_Textformfield(
+                    controller: email_controller, 
+                    width: 300.w, 
+                    //再入力時エラーが消える
+                    onChanged: (_){
+                      _formKey.currentState?.validate();
+                    },
+                  ),
+                  SizedBox(height: 10.h),
+                  Password_Textformfield(
+                    controller:password_controller, 
+                    width: 300.w,
+                    showForgotPassword: true,
+                    onChanged: (_){
+                      _formKey.currentState?.validate();
+                    },
+                  ),
+                  SizedBox(height: 5.h),
+                  //ログインボタンの呼び出し
+                  LoginButton(
+                    onPressed: (){
+                      final isValid = _formKey.currentState?.validate() ?? false;
+                      if(isValid){
+                        return;
+                      }
+                    },
+                  ),
+                  SizedBox(height: 15.h),
+                  //OR
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 1, 
+                          color: Colors.grey,
+                          indent: 80.w,
+                        )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'or', 
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            color: Colors.grey
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey,
-                        endIndent: 80.w,
-                      )
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20.h),
-                GoogleLoginButton(
-                  //⭐︎Todo Googleログイン処理
-                  onPressed: (){
-                    
-                  },
-                ),
-                SizedBox(height: 20.h),
-                Text(
-                  "新規登録はこちら",
-                  style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.customgray,
+                      Expanded(
+                        child: Divider(
+                          thickness: 1,
+                          color: Colors.grey,
+                          endIndent: 80.w,
+                        )
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 10.h),
-                //新規登録ボタン
-                NewregistrationButton(
-                  onPressed: (){
-                    //新規登録画面への遷移
-                    Navigator.push(context, 
-                      MaterialPageRoute(
-                        builder: (context) => RegisterScreen(),
-                      )
-                    );
-                  },
-                ),
-              ],
-            )
+                  SizedBox(height: 20.h),
+                  GoogleLoginButton(
+                    //⭐︎Todo Googleログイン処理
+                    onPressed: (){
+                      
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  Text(
+                    "新規登録はこちら",
+                    style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.customgray,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  //新規登録ボタン
+                  NewregistrationButton(
+                    onPressed: (){
+                      //新規登録画面への遷移
+                      Navigator.push(context, 
+                        MaterialPageRoute(
+                          builder: (context) => RegisterScreen(),
+                        )
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ) 

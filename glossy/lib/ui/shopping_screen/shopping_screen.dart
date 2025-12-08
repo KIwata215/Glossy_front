@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:glossy/component/SearchBar.dart' as custom;
-import 'package:glossy/component/HairGoods.dart'; // ← 追加
+import 'package:glossy/component/HairGoods.dart';
+import 'package:glossy/component/AppBar.dart';
+import 'package:glossy/component/Item.dart';
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
+
+  // ★ テスト用商品データ（後で API に置き換え）
+  List<Map<String, dynamic>> get testItems => List.generate(12, (index) {
+        return {
+          "imageUrl": "https://placehold.jp/150x150.png",
+          "name": "商品名サンプル $index",
+          "brand": "ブランド名",
+          "price": 1980 + index * 100,
+        };
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -12,40 +24,37 @@ class ShoppingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 検索バーとハートアイコンを横並びに配置
+            // ---------- 検索バー + お気に入り ----------
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // 検索バーを中央寄せ
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: custom.SearchBar(),
                     ),
                   ),
-                  // ハートアイコンと「お気に入り」文字
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 16.0),
                     child: Column(
                       children: [
                         GestureDetector(
                           onTap: () {
-                            // favorite_screen.dart へ遷移
                             Navigator.pushNamed(context, '/favorite');
                           },
                           child: Icon(
-                            Icons.favorite_border, // 縁のみ
+                            Icons.favorite_border,
                             color: const Color(0xFFA674A4),
-                            size: 30, // 小さめ
+                            size: 30,
                           ),
                         ),
                         const SizedBox(height: 2),
                         const Text(
                           'お気に入り',
                           style: TextStyle(
-                            fontSize: 10, // 小さめ
+                            fontSize: 10,
                             color: Color(0xFFA674A4),
                           ),
                         ),
@@ -55,11 +64,23 @@ class ShoppingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // ↓ここにHairGoodsSelectorを追加
+
+            // ---------- ヘアカテゴリ セレクター ----------
             const HairGoodsSelector(),
-            // ...existing code...（ここに画面の残りの UI を追加してください）
+
+            // ---------- 商品一覧グリッド（3列） ----------
+            Expanded(
+              child: ItemGrid(items: testItems),
+            ),
           ],
         ),
+      ),
+
+      bottomNavigationBar: BottomAppBarCustom(
+        selectedIndex: 3,
+        onTap: (index) {
+          // TODO: 遷移処理
+        },
       ),
     );
   }
