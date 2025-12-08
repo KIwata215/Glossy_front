@@ -1,4 +1,22 @@
 PODS:
+  - Flutter (1.0.0)
+  - photo_manager (3.8.0):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - photo_manager (from `.symlinks/plugins/photo_manager/darwin`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  photo_manager:
+    :path: ".symlinks/plugins/photo_manager/darwin"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  photo_manager: 343d78032bf7ebe944d2ab9702204dc2eda07338
   - Firebase/CoreOnly (11.15.0):
     - FirebaseCore (~> 11.15.0)
   - firebase_core (3.15.2):
