@@ -7,6 +7,7 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
   final String rightText;
   final Color textColor;
   final VoidCallback? onRightTap;
+  final Widget? child; // ← ★追加（検索バーなどを置ける）
   const PostHeader({
     super.key,
     this.backgroundColor = const Color(0xFF2B2B2B),
@@ -14,6 +15,7 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
     this.rightText = "次へ",
     this.textColor = AppColors.custompurple,
     this.onRightTap,
+    this.child,
   });
 
   @override
@@ -23,35 +25,36 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(color: backgroundColor),
       child: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            /// ←戻るボタン
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(Icons.arrow_back_ios, color: textColor, size: 20),
-            ),
-
-            /// 中央タイトル
-            Text(
-              titleText,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+        child: child != null
+            ? child! // ← ★検索バーなどをそのまま表示
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: textColor,
+                      size: 20,
+                    ),
+                  ),
+                  Text(
+                    titleText ?? "",
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: onRightTap,
+                    child: Text(
+                      rightText ?? "",
+                      style: TextStyle(color: textColor, fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
-            ),
-
-            /// 右「次へ」ボタン
-            GestureDetector(
-              onTap: onRightTap,
-              child: Text(
-                rightText,
-                style: TextStyle(color: textColor, fontSize: 16),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
