@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// 商品カードUI
-class ItemCard extends StatelessWidget {
+/// 商品カードUI（ハートの状態を持つので StatefulWidget に変更）
+class ItemCard extends StatefulWidget {
   final String imageUrl;
   final String name;
   final String brand;
@@ -18,9 +18,16 @@ class ItemCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ItemCard> createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<ItemCard> {
+  bool isFavorite = false; // ← ハート状態（初期はオフ）
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -36,22 +43,22 @@ class ItemCard extends StatelessWidget {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Image.network(
-                  imageUrl,
+                  widget.imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
 
-            /// ==== ここにハートを移動（文字の1行目の右上） ====
+            /// 上段（ブランド名 ＋ ハート）
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  /// ブランド
+                  /// ブランド名
                   Expanded(
                     child: Text(
-                      brand,
+                      widget.brand,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -62,11 +69,18 @@ class ItemCard extends StatelessWidget {
                     ),
                   ),
 
-                  /// 右上のハート
-                  Icon(
-                    Icons.favorite_border,
-                    size: 18,
-                    color: Color(0xFFE3D0E2),
+                  /// ハートアイコン（押すと色が変わる）
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFavorite = !isFavorite;
+                      });
+                    },
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 18,
+                      color: const Color(0xFFE3D0E2), // ON も OFF もこの色
+                    ),
                   ),
                 ],
               ),
@@ -78,7 +92,7 @@ class ItemCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Text(
-                name,
+                widget.name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -95,7 +109,7 @@ class ItemCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Text(
-                "¥${price.toString()}",
+                "¥${widget.price.toString()}",
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
