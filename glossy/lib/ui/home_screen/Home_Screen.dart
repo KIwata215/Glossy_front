@@ -44,13 +44,21 @@ int _selectedIndex = 0;
           ],
         ),
         body:TabBarView(
-          //タブ切り替え
-          physics: BouncingScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(), // 横スワイプ防止（事故防止）
           children: [
-            LadiesTab(),
-            FollowingTab(),
-            MensTab(),
-          ]
+            GenrePage(
+              genreName: 'レディース',
+              colorList: [Colors.pink, Colors.red, Colors.purple],
+            ),
+            GenrePage(
+              genreName: 'フォロー中',
+              colorList: [Colors.blue, Colors.lightBlue, Colors.indigo],
+            ),
+            GenrePage(
+              genreName: 'メンズ',
+              colorList: [Colors.black, Colors.grey, Colors.brown],
+            ),
+          ],
         ),
         bottomNavigationBar: BottomAppBarCustom(
           selectedIndex: _selectedIndex,
@@ -63,36 +71,85 @@ int _selectedIndex = 0;
     );
   }
 }
-class LadiesTab extends StatefulWidget{
-  State<LadiesTab> createState() => _LadiesTabState();
-}
-class _LadiesTabState extends State<LadiesTab>{
+class GenrePage extends StatefulWidget {
+  final List<Color> colorList;
+  final String genreName; // レディース / メンズ など
+
+  const GenrePage({
+    super.key,
+    required this.colorList,
+    required this.genreName,
+  });
+
   @override
-  Widget build(BuildContext context){
-    return Center(  
-      child: Text("レディースタブ"),
-    );
+  State<GenrePage> createState() => _GenrePageState();
+}
+
+class _GenrePageState extends State<GenrePage> {
+  late final PageController _pageController;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
   }
-}
-class FollowingTab extends StatefulWidget{
-  State<FollowingTab> createState() => _FollowingTabState();
-}
-class _FollowingTabState extends State<FollowingTab>{
+
   @override
-  Widget build(BuildContext context){
-    return Center(  
-      child: Text("フォロー中タブ"),
-    );
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
-}
-class MensTab extends StatefulWidget{
-  State<MensTab> createState() => _MensTabState();
-}
-class _MensTabState extends State<MensTab>{
+
   @override
-  Widget build(BuildContext context){
-    return Center(
-      child: Text("メンズ"),
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: _pageController,
+      scrollDirection: Axis.vertical,
+      itemCount: widget.colorList.length,
+      onPageChanged: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      itemBuilder: (context, index) {
+        return Container(
+          color: widget.colorList[index],
+          child: SafeArea(
+            child: Stack(
+              children: [
+                /// 中央表示（動画の代わり）
+                Center(
+                  child: Text(
+                    '${widget.genreName}\nVIDEO $index',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+
+                /// 右下インジケータ（TikTokっぽさ）
+                Positioned(
+                  right: 16,
+                  bottom: 32,
+                  child: Column(
+                    children: [
+                      const Icon(Icons.favorite, color: Colors.white),
+                      const SizedBox(height: 16),
+                      const Icon(Icons.comment, color: Colors.white),
+                      const SizedBox(height: 16),
+                      const Icon(Icons.bookmark, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
