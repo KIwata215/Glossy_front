@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glossy/component/AppBar.dart';
 import 'package:glossy/res/Color.dart';
+import 'package:glossy/router/AppRouter.dart';
 
 class HomeScreen extends StatefulWidget{
   State<HomeScreen> createState() => _HomeScreenState();
 }
 class _HomeScreenState extends State<HomeScreen>{
-
-
+int _selectedIndex = 0;
   @override
   Widget build(BuildContext context){
     return DefaultTabController(
@@ -51,6 +52,13 @@ class _HomeScreenState extends State<HomeScreen>{
             MensTab(),
           ]
         ),
+        bottomNavigationBar: BottomAppBarCustom(
+          selectedIndex: _selectedIndex,
+          onTap: (index) {
+            AppRouter.navigate(context, _selectedIndex, index);
+            setState(() => _selectedIndex = index);
+          },
+        )
       ),
     );
   }
