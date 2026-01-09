@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glossy/ui/home_screen/Home_Screen.dart';
 import 'package:glossy/ui/login_screen/Login_Screen.dart';
+import 'package:glossy/ui/register_screen/Register_Screen.dart';
+import 'package:glossy/ui/shopping_screen/shopping_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,11 +24,18 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_ ,child){
         return MaterialApp(
+          initialRoute: '/home',
+          routes: {
+            '/login': (context) => LoginScreen(),
+            'register': (context) => RegisterScreen(),
+            '/home': (context) => HomeScreen(),
+            '/shopping': (context) => ShoppingScreen(),
+          },
           debugShowCheckedModeBanner: false,
           theme:ThemeData(
             useMaterial3: true,
           ) ,
-          home:  LoginScreen(),
+          home:  HomeScreen(),
           title: 'LoginPage',
         );
       },
