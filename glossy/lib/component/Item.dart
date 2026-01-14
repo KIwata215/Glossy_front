@@ -129,8 +129,13 @@ class _ItemCardState extends State<ItemCard> {
 /// GridView（横3列）
 class ItemGrid extends StatelessWidget {
   final List<Map<String, dynamic>> items;
+  final void Function(Map<String, dynamic> item)? onItemTap; // ← 追加
 
-  const ItemGrid({Key? key, required this.items}) : super(key: key);
+  const ItemGrid({
+    Key? key,
+    required this.items,
+    this.onItemTap, // ← 追加
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +156,11 @@ class ItemGrid extends StatelessWidget {
           name: item["name"],
           brand: item["brand"],
           price: item["price"],
+          onTap: () {
+            if (onItemTap != null) {
+              onItemTap!(item);
+            }
+          }, // ← 追加
         );
       },
     );
