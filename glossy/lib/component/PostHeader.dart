@@ -10,7 +10,7 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
   final Widget? child; // ← ★追加（検索バーなどを置ける）
   const PostHeader({
     super.key,
-    this.backgroundColor = const Color(0xFF2B2B2B),
+    this.backgroundColor = Colors.white,
     this.titleText = "新規投稿",
     this.rightText = "次へ",
     this.textColor = AppColors.custompurple,

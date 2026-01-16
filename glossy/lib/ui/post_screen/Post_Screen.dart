@@ -13,7 +13,11 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   List<AssetEntity> mediaList = []; // スマホ内のアルバムリスト
-  AssetEntity? selectedMedia; // 選択された画像or動画
+  List<AssetEntity> selectedMediaList = [];
+  AssetEntity? selectedMedia;
+
+  AssetEntity? get previewMedia =>
+      selectedMediaList.isNotEmpty ? selectedMediaList.first : null;
 
   @override
   void initState() {
@@ -40,9 +44,8 @@ class _PostScreenState extends State<PostScreen> {
 
       setState(() {
         mediaList = media;
-        if (mediaList.isNotEmpty) {
-          selectedMedia = mediaList.first;
-        }
+        // 初期選択を空のままにする（必要なら最初の1枚を選択する）
+        selectedMediaList = [];
       });
     } else {
       PhotoManager.openSetting();
@@ -52,83 +55,92 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PostHeader(
-        // ← const を削除
-        backgroundColor: AppColors.customblack,
-        titleText: "新規投稿",
-        rightText: "次へ",
-        textColor: AppColors.custompurple,
-        onRightTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => PostOverViewScreen(
-                selectedMediaList: mediaList, // ← 複数画像を送る
-              ),
-            ),
-          );
-        },
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: SafeArea(
+          bottom: false,
+          child: PostHeader(
+            backgroundColor: AppColors.customblack,
+            titleText: "新規投稿",
+            rightText: "次へ",
+            textColor: AppColors.custompurple,
+            onRightTap: () {
+              // Navigator 実行前に渡す内容をログ
+              print(
+                'navigating with ${selectedMediaList.length} items: ${selectedMediaList.map((e) => e.id).toList()}',
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => PostOverViewScreen(
+                    selectedMediaList: selectedMediaList, // ← 複数画像を送る
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
 
       body: Column(
         children: [
-          // ① プレビュー（画像 or 動画サムネ）
+          // ① プレビュー
           Container(
-            color: AppColors.customblack,
-            height: 300,
+            color: Colors.black,
             width: double.infinity,
-            child: selectedMedia == null
-                ? const Center(child: CircularProgressIndicator())
-                : FutureBuilder(
-                    future: selectedMedia!.thumbnailDataWithSize(
-                      const ThumbnailSize(800, 800),
-                    ),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+            child: AspectRatio(
+              aspectRatio: 4 / 3,
+              child: selectedMedia == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : FutureBuilder(
+                      future: selectedMedia!.thumbnailDataWithSize(
+                        const ThumbnailSize(1000, 1000),
+                      ),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
 
-                      return Stack(
-                        children: [
-                          Image.memory(snapshot.data!, fit: BoxFit.cover),
+                        return Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Image.memory(snapshot.data!, fit: BoxFit.cover),
 
-                          // 動画の場合「再生アイコン」を表示
-                          if (selectedMedia!.type == AssetType.video)
-                            const Positioned(
-                              bottom: 16,
-                              right: 16,
-                              child: Icon(
-                                Icons.play_circle_fill,
-                                size: 42,
-                                color: Colors.white,
+                            if (selectedMedia!.type == AssetType.video)
+                              const Center(
+                                child: Icon(
+                                  Icons.play_circle_fill,
+                                  size: 64,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                          ],
+                        );
+                      },
+                    ),
+            ),
           ),
 
-          // 区切り線
-          Container(height: 2, color: const Color(0xFFC0C0C0)),
+          // ② 黒余白
+          Container(height: 8, color: Colors.black),
 
-          // ② ギャラリー一覧（画像＋動画）
+          // ③ グリッド
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(4),
-              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.zero,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
+                crossAxisSpacing: 1,
+                mainAxisSpacing: 1,
               ),
-              itemCount: mediaList.length + 1, // カメラアイコン追加
+              itemCount: mediaList.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  // カメラアイコン
                   return Container(
-                    color: AppColors.customblack,
-                    child: const Icon(Icons.camera_alt, size: 28),
+                    color: Colors.black,
+                    child: const Icon(Icons.camera_alt, color: Colors.white),
                   );
                 }
 
@@ -137,23 +149,71 @@ class _PostScreenState extends State<PostScreen> {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedMedia = media;
+                      final existsIndex = selectedMediaList.indexWhere(
+                        (e) => e.id == media.id,
+                      );
+                      if (existsIndex >= 0) {
+                        // すでに選択済み → 解除
+                        selectedMediaList.removeAt(existsIndex);
+                        if (selectedMedia?.id == media.id) {
+                          selectedMedia = selectedMediaList.isNotEmpty
+                              ? selectedMediaList.first
+                              : null;
+                        }
+                      } else {
+                        // 未選択 → 追加
+                        selectedMediaList.add(media);
+                        selectedMedia = media;
+                      }
                     });
+
+                    // デバッグ出力：選択数と選択中のID一覧
+                    print(
+                      'selectedMediaList.length = ${selectedMediaList.length}',
+                    );
+                    print(
+                      'selected ids = ${selectedMediaList.map((e) => e.id).toList()}',
+                    );
                   },
                   child: FutureBuilder(
                     future: media.thumbnailDataWithSize(
-                      const ThumbnailSize(200, 200),
+                      const ThumbnailSize(300, 300),
                     ),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Container(color: Colors.grey);
+                        return Container(color: Colors.black);
                       }
 
+                      final isSelected = selectedMediaList.any(
+                        (e) => e.id == media.id,
+                      );
+
                       return Stack(
+                        fit: StackFit.expand,
                         children: [
                           Image.memory(snapshot.data!, fit: BoxFit.cover),
 
-                          // 動画には右下に再生マーク
+                          // 選択中オーバーレイ（選択時に薄いマスク）
+                          if (isSelected) Container(color: Colors.black26),
+
+                          // 選択順を右上に表示
+                          if (isSelected)
+                            Positioned(
+                              top: 6,
+                              right: 6,
+                              child: CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.purple,
+                                child: Text(
+                                  '${selectedMediaList.indexWhere((e) => e.id == media.id) + 1}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+
                           if (media.type == AssetType.video)
                             const Positioned(
                               right: 4,
