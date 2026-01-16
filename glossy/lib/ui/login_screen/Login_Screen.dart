@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/Button.dart';
 import 'package:glossy/component/Textformfield.dart';
 import 'package:glossy/res/Color.dart';
+import 'package:glossy/ui/home_screen/Home_Screen.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
 
 class LoginScreen extends StatefulWidget{
@@ -103,10 +106,28 @@ class _LoginScreenState extends State<LoginScreen>{
                   SizedBox(height: 5.h),
                   //ログインボタンの呼び出し
                   LoginButton(
-                    onPressed: (){
-                      final isValid = _formKey.currentState?.validate() ?? false;
-                      if(isValid){
-                        return;
+                    onPressed:()async{
+                      try{
+                        //メールアドレス・パスワードのバリデーション
+                        final isValid = _formKey.currentState?.validate() ?? false;
+                        if(!isValid){
+                          return;
+                        }
+                        //メールアドレス・パスワードでのログイン処理
+                        final FirebaseAuth auth = FirebaseAuth.instance;
+                        await auth.signInWithEmailAndPassword(
+                          email: email_controller.text.trim(),
+                          password: password_controller.text.trim(),
+                        );
+                        await Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      } catch (e) {
+                        //ここにエラーハンドリングを追加（例: エラーメッセージの表示）
+                        print('ログインエラー: $e'); 
+                        
                       }
                     },
                   ),

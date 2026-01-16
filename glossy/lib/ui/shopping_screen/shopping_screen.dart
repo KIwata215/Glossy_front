@@ -3,6 +3,7 @@ import 'package:glossy/component/SearchBar.dart' as custom;
 import 'package:glossy/component/HairGoods.dart';
 import 'package:glossy/component/AppBar.dart';
 import 'package:glossy/component/Item.dart';
+import 'package:glossy/router/AppRouter.dart';
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({Key? key}) : super(key: key);
@@ -70,17 +71,28 @@ class ShoppingScreen extends StatelessWidget {
 
             // ---------- 商品一覧グリッド（3列） ----------
             Expanded(
-              child: ItemGrid(items: testItems),
+              child: ItemGrid(
+                items: testItems,
+                onItemTap: (item) {
+                  Navigator.pushNamed(
+                    context,
+                    '/itemdetail',
+                    arguments: item,
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
-
-      bottomNavigationBar: BottomAppBarCustom(
-        selectedIndex: 3,
-        onTap: (index) {
-          // TODO: 遷移処理
-        },
+      bottomNavigationBar: SafeArea(
+        child: BottomAppBarCustom(
+          selectedIndex: 3,
+          onTap: (index) {
+            // TODO: 遷移処理
+          AppRouter.navigate(context, 3, index);
+          },
+        ),
       ),
     );
   }
