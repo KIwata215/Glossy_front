@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../../component/PostHeader.dart';
-import '../../component/AppBar.dart';
 import '../../res/Color.dart';
 
 class PostDetailScreen extends StatelessWidget {

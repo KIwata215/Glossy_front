@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../../res/Color.dart';
 import '../../component/TagSelectSheet.dart';
-import 'UseItemScreen.dart'; // 未作成でもOK（後ほど作成）
+import 'PostDetail_Screen.dart';
+import 'UseItemScreen.dart';
 
 class PostOverViewScreen extends StatefulWidget {
   final List<AssetEntity> selectedMediaList;
@@ -33,7 +34,19 @@ class _PostOverViewScreenState extends State<PostOverViewScreen> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => PostDetailScreen(
+                    mediaList: widget.selectedMediaList,
+                    description: descriptionController.text,
+                    difficulty: difficulty,
+                    tags: selectedTags,
+                  ),
+                ),
+              );
+            },
             child: const Padding(
               padding: EdgeInsets.only(right: 16),
               child: Center(

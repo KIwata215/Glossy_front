@@ -16,23 +16,24 @@ class _UseItemScreenState extends State<UseItemScreen> {
   int selectedCategory = 2; // 初期はスタイリング剤
   String searchKeyword = "";
   String? selectedItem; // アイテムを選んだかどうか
+  String? selectedItemImage; //選択したアイテムの画像パス
 
   // ⭐ ダミーデータ（後で楽天APIに差し替え）
   List<Map<String, String>> dummyItems = [
     {
       "name": "プロダクトバーム",
       "price": "2180",
-      "image": "https://via.placeholder.com/120",
+      "image": "assets/images/product_balm.png",
     },
     {
       "name": "メルティバターバーム",
       "price": "1800",
-      "image": "https://via.placeholder.com/120",
+      "image": "assets/images/melt_butter_balm.png",
     },
     {
       "name": "N. ナチュラルバーム",
       "price": "1800",
-      "image": "https://via.placeholder.com/120",
+      "image": "assets/images/natural_balm.png",
     },
   ];
 
@@ -103,20 +104,25 @@ class _UseItemScreenState extends State<UseItemScreen> {
                         onTap: () {
                           setState(() {
                             selectedItem = item["name"];
+                            selectedItemImage = item["image"];
                           });
                         },
                         child: Column(
                           children: [
                             Stack(
                               children: [
-                                Container(
-                                  height: 90,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(item["image"]!),
+                                // assets の画像を表示（角丸を適用）
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SizedBox(
+                                    height: 90,
+                                    width: double.infinity,
+                                    child: Image.asset(
+                                      item["image"]!,
                                       fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) =>
+                                          Container(color: Colors.grey[300]),
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
 
@@ -178,7 +184,10 @@ class _UseItemScreenState extends State<UseItemScreen> {
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context, selectedItem);
+                      Navigator.pop(context, {
+                        'name': selectedItem!,
+                        'image': selectedItemImage ?? '',
+                      });
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
