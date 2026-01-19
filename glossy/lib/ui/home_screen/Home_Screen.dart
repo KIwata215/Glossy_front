@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen>{
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.customwhite,
           elevation: 0,
           title: TabBar(
@@ -56,25 +57,31 @@ class _HomeScreenState extends State<HomeScreen>{
             GenrePage(
               genreName: 'レディース',
               videoPaths: [
-                'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
+                'assets/video/sample1_ledies.mp4',
+                'assets/video/sample2_ledies.mp4',
+                'assets/video/sample3_ledies.mp4',
+                'assets/video/sample4_ledies.mp4',
+                'assets/video/sample5_ledies.mp4',
               ],
             ),
             GenrePage(
               genreName: 'フォロー中',
               videoPaths: [
+                'assets/video/sample4_ledies.mp4',
+                'assets/video/sample2.mp4',
+                'assets/video/sample1_ledies.mp4',
+                'assets/video/sample2_ledies.mp4',
                 'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
+                'assets/video/sample3_ledies.mp4',
+                'assets/video/sample5_ledies.mp4',
               ],
             ),
             GenrePage(
               genreName: 'メンズ',
               videoPaths: [
                 'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
-                'assets/video/sample1.mp4',
+                'assets/video/sample2.mp4',
+                'assets/video/sample3.mp4',
               ],
             ),
           ],
@@ -111,6 +118,9 @@ class _GenrePageState extends State<GenrePage> {
   final List<VideoPlayerController> _videoControllers = [];
   bool _videosInitialized = false;
   bool _isSeeking = false;
+  // _isDisposed フラグ
+  // dispose後の非同期処理を完全遮断
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -120,22 +130,35 @@ class _GenrePageState extends State<GenrePage> {
   }
 
   Future<void> _initVideos() async {
-    // 各動画コントローラを初期化してリスナーをセット
     for (final path in widget.videoPaths) {
+      if (_isDisposed) return;
+
       final controller = VideoPlayerController.asset(path)..setLooping(true);
+
       try {
         await controller.initialize();
-      } catch (e) {
-        // 初期化エラーは無視して次へ（必要ならログ）
+      } catch (_) {
+        continue;
       }
+
+      if (_isDisposed) {
+        controller.dispose();
+        return;
+      }
+
       controller.addListener(() {
-        if (mounted && !_isSeeking) setState(() {});
+        if (!_isDisposed && mounted && !_isSeeking) {
+          setState(() {});
+        }
       });
+
       _videoControllers.add(controller);
     }
 
-    // 最初の動画を再生（初期化完了後）
-    if (_videoControllers.isNotEmpty && _videoControllers[0].value.isInitialized) {
+    if (_isDisposed) return;
+
+    if (_videoControllers.isNotEmpty &&
+        _videoControllers[0].value.isInitialized) {
       await _videoControllers[0].play();
     }
 
@@ -144,6 +167,7 @@ class _GenrePageState extends State<GenrePage> {
 
   @override
   void dispose() {
+    _isDisposed = true;
     for (final c in _videoControllers) {
       c.dispose();
     }
@@ -152,20 +176,19 @@ class _GenrePageState extends State<GenrePage> {
   }
 
   void _onPageChanged(int index) async {
-    if (_videoControllers.isEmpty) return;
-    // 前の動画を停止
+    if (_isDisposed || _videoControllers.isEmpty) return;
+
     final prev = _videoControllers[_currentIndex];
-    if (prev.value.isInitialized) prev.pause();
+    if (prev.value.isInitialized) {
+      await prev.pause();
+    }
 
     _currentIndex = index;
 
-    // 新しい動画を初期化済みであれば再生
     final next = _videoControllers[_currentIndex];
-    if (next.value.isInitialized) {
+    if (!_isDisposed && next.value.isInitialized) {
       await next.play();
     }
-
-    if (mounted) setState(() {});
   }
 
   @override
@@ -230,9 +253,11 @@ class _GenrePageState extends State<GenrePage> {
                 bottom: 50.h,
                 child: Column(
                   children: [
-                    Account_Button(onPressed: (){
+                    Account_Button(
+                      onPressed: (){
                       // アカウントボタンの処理
-                    }),
+                      }
+                    ),
                     LikeButton(
                       onPressed: (){
                         // いいねボタンの処理
