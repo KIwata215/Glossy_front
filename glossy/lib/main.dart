@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glossy/ui/post_screen/Post_Screen.dart';
+import 'package:glossy/ui/profile_screen/Profile_Screen.dart';
 import 'package:glossy/ui/favorite_screen/favorite_screen.dart';
 import 'package:glossy/ui/home_screen/Home_Screen.dart';
 import 'package:glossy/ui/itemdetail_screen/itemdetail_screen.dart';
@@ -32,8 +34,10 @@ class MyApp extends StatelessWidget {
             'register': (context) => RegisterScreen(),
             '/home': (context) => HomeScreen(),
             '/shopping': (context) => ShoppingScreen(),
-            '/favorite': (context) => const FavoriteScreen(),
-            '/itemdetail': (context) => const ItemDetailScreen(),
+            '/post': (context) => PostScreen(),
+            '/favorite': (context) => FavoriteScreen(),
+            '/itemdetail': (context) => ItemDetailScreen(),
+            '/profile': (context) =>  Profile_Screen(),
           },
           debugShowCheckedModeBanner: false,
           theme:ThemeData(
