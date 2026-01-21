@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/AppBar.dart';
 import 'package:glossy/component/Button.dart';
+import 'package:glossy/component/Seek_bar.dart';
 import 'package:glossy/res/Color.dart';
 import 'package:glossy/router/AppRouter.dart';
 import 'package:video_player/video_player.dart';
@@ -250,7 +251,7 @@ class _GenrePageState extends State<GenrePage> {
               // 右下インジケータ
               Positioned(
                 right: 10.w,
-                bottom: 50.h,
+                bottom: 1.h,
                 child: Column(
                   children: [
                     Account_Button(
@@ -281,63 +282,60 @@ class _GenrePageState extends State<GenrePage> {
                   ],
                 ),
               ),
-              // 下部に再生コントロールとシークバー
+              // 左下：アカウント名＆説明文（TikTok風）
               Positioned(
-                left: 8.w,
-                right: 8.w,
-                bottom: 1.h,
+                left: 12.w,
+                bottom: 40.h, // 再生バーの少し上
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
-                            color: Colors.white,
-                            size: 36.h,
+                    // アカウント名
+                    Text(
+                      '@username',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.6),
                           ),
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            if (isPlaying) {
-                              controller.pause();
-                            } else {
-                              controller.play();
-                            }
-                            if (mounted) setState(() {});
-                          },
-                        ),
-
-                        Text(
-                          '${_formatDuration(position)} / ${_formatDuration(duration)}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    // シークバー
-                    Slider(
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white38,
-                      min: 0,
-                      max: duration!.inMilliseconds.toDouble().clamp(1.0, double.infinity),
-                      value: position!.inMilliseconds.toDouble().clamp(0.0, duration.inMilliseconds.toDouble()),
-                      onChangeStart: (_) {
-                        _isSeeking = true;
-                      },
-                      onChanged: (value) async {
-                        // シークバーを動かしたときのUI更新のみ（実際の移動はonChangeEndで行う）
-                        if (mounted) setState(() {});
-                      },
-                      onChangeEnd: (value) async {
-                        final pos = Duration(milliseconds: value.toInt());
-                        await controller.seekTo(pos);
-                        _isSeeking = false;
-                        if (mounted) setState(() {});
-                      },
+                    SizedBox(height: 6.h),
+
+                    // 説明文
+                    SizedBox(
+                      width: 260.w, // はみ出し防止
+                      child: Text(
+                        "テスト",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(0, 1),
+                              blurRadius: 4,
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
+              ),
+              // 下部に再生コントロールとシークバー
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: TikTokProgressBar(controller: controller),
               ),
             ],
           ),
