@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/Button.dart';
@@ -19,22 +18,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController email_controller = TextEditingController();
   final TextEditingController password_controller = TextEditingController();
   //選択された値を格納する変数
-  String? selectedgender;
-  String? selectedhairtype;
-  String? selectedishairdresser;
+  String? selectedGender;
+  String? selectedHairType;
+  String? selectedRole;
+
   //エラーメッセージ引数
   String? genderError;
   String? hairtypeError;
-  String? ishairdresserError;
+  String? roleError;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
            // 左上の緑の円
-          Positioned(
+          Positioned( 
             top: -300.h,
-            left: -200.w,
+            left: -200.w, 
             child: Container(
               width: 400.w,
               height: 400.h,
@@ -136,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Dropdownmenu(
                       onChanged: (value){
                         setState(() {
-                          selectedgender = value;
+                          selectedGender = value;
                         });
                       },
                       labelText: '性別',
@@ -149,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Dropdownmenu(
                       onChanged: (value){
                         setState(() {
-                          selectedhairtype = value;
+                          selectedHairType = value;
                         });
                       },
                       labelText: '髪質',
@@ -167,14 +168,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Dropdownmenu(
                       onChanged: (value){
                         setState(() {
-                          selectedishairdresser = value;
+                          selectedRole = value;
                         });
                       },
                       items: ['はい', 'いいえ'],
                       hint: "", 
                       width: 200.w, 
                       labelText: 'あなたは美容師ですか？',
-                      errorMessage: ishairdresserError,
+                      errorMessage: roleError,
                     ),
                   ],
                 ),
@@ -183,21 +184,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed:()async{
                     //メールアドレスとパスワードでユーザー登録 
                     setState(() {
-                      genderError = (selectedgender == null) ? '性別を選択してください' : null;
-                      hairtypeError = (selectedhairtype == null) ? '髪質を選択してください' : null;
-                      ishairdresserError = (selectedishairdresser == null) ? '選択してください' : null;
+                      genderError = (selectedGender == null) ? '性別を選択してください' : null;
+                      hairtypeError = (selectedHairType == null) ? '髪質を選択してください' : null;
+                      roleError = (selectedRole == null) ? '選択してください' : null;
                     });
                     // どれか未入力なら処理中止
-                    if (selectedgender == null ||
-                        selectedhairtype == null ||
-                        selectedishairdresser == null){
+                    if (selectedGender == null ||
+                        selectedHairType == null ||
+                        selectedRole == null){
                       return;
                     }
                     try{
                       //⭐︎Todo 新規登録処理
-                      print('性別:$selectedgender');
-                      print('髪質:$selectedhairtype');
-                      print('美容師ですか？:$selectedishairdresser');
+                      print('性別:$selectedGender');
+                      print('髪質:$selectedHairType');
+                      print('美容師ですか？:$selectedRole');
                       final FirebaseAuth auth = FirebaseAuth.instance;
                       await auth.createUserWithEmailAndPassword(
                         email: email_controller.text, 
@@ -205,11 +206,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       );
                       await registerUser(
                         email: email_controller.text,
-                        password: password_controller.text,
                         username: username_controller.text,
-                        gender: selectedgender!,
-                        hairType: selectedhairtype!,
-                        isHairdresser: selectedishairdresser!,
+                        gender: selectedGender!,
+                        hairType: selectedHairType!,
+                        isHairdresser: selectedRole!,
                       );
                       await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
@@ -236,40 +236,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
 Future<void> registerUser({
   required String email,
-  required String password,
   required String username,
   required String gender,
   required String hairType,
   required String isHairdresser,
+}) async {
+  try {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({
+      "user_id": uid,
+      "name": username,
+      "email": email,
+      "bio": "",
+      "gender_cd": gender == "男性",
+      "hair_type": hairType,
+      "icon_url": "",
+      "role": isHairdresser == "はい",
+      "createdAt": FieldValue.serverTimestamp(),
+    });
 
-}) async{
-  try{
-  final uid = FirebaseAuth.instance.currentUser?.uid;
-  bool genderCd = (gender == "男性") ? true : false;
-  bool role = (isHairdresser == "はい") ? true : false;
-  int hairTypeNumber ={
-    "直毛": 1,
-    "くせ毛": 2,
-    "その他": 3,
-    "パーマ": 4,
-    "縮毛矯正": 5,
-  }[hairType] ?? 0;
-
-await FirebaseFirestore.instance.collection('users').doc(uid).set({
-  "user_id": uid,
-  "email": email,
-  "name": username,
-  "icon_url":"",
-  "bio":"",
-  "gender_cd": genderCd,
-  "hair_type": hairTypeNumber,
-  "is_hairdresser": role,
-});
-  print("登録成功！Firestore にデータ保存完了");
-}catch(e){
-  print("Firestore へのデータ保存中にエラーが発生: $e");
-  rethrow;
-} 
-}    
+    print("登録成功！");
+  } catch (e) {
+    print("Firestore エラー: $e");
+    rethrow;
+  }
+}   
