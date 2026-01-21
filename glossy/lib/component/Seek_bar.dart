@@ -26,17 +26,14 @@ class TikTokProgressBar extends StatelessWidget {
 
         final relative = dx / width;
         final seekTo = duration * relative;
-
         controller.seekTo(seekTo);
       },
       onHorizontalDragUpdate: (details) {
         final box = context.findRenderObject() as RenderBox;
         final dx = details.localPosition.dx;
         final width = box.size.width;
-
         final relative = dx / width;
         final seekTo = duration * relative;
-
         controller.seekTo(seekTo);
       },
       child: SizedBox(
