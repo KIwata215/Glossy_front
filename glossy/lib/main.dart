@@ -10,6 +10,7 @@ import 'package:glossy/ui/login_screen/Login_Screen.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
 import 'package:glossy/ui/search_screen/serch_screen.dart';
 import 'package:glossy/ui/shopping_screen/shopping_screen.dart';
+import 'package:glossy/ui/splash_screen/Splash_Screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +30,13 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_ ,child){
         return MaterialApp(
-          initialRoute: '/home',
+          initialRoute: '/splash',
           routes: {
             '/login': (context) => LoginScreen(),
             'register': (context) => RegisterScreen(),
             '/home': (context) => HomeScreen(),
             '/shopping': (context) => ShoppingScreen(),
+            '/splash': (context) => SplashScreen(),
             '/post': (context) => PostScreen(),
             '/favorite': (context) => FavoriteScreen(),
             '/itemdetail': (context) => ItemDetailScreen(),
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           theme:ThemeData(
             useMaterial3: true,
           ) ,
-          home:  HomeScreen(),
+          home:  SplashScreen(),
           title: 'LoginPage',
         );
       },
