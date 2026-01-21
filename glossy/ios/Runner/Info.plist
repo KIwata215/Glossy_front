@@ -49,5 +49,14 @@
 	<string>投稿用に写真・動画を選択するために使用します</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>投稿用に写真・動画を保存するために使用します</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>335554982927-1foincs1hfp1u5origvlgkst0r1uqgsu.apps.googleusercontent.com</string>
+		</array>
+	</dict>
+	</array>
 </dict>
 </plist>
