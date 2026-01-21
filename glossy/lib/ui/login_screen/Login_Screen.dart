@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/Button.dart';
 import 'package:glossy/component/Textformfield.dart';
 import 'package:glossy/res/Color.dart';
 import 'package:glossy/ui/home_screen/Home_Screen.dart';
+import 'package:glossy/ui/login_screen/GoogleLogin.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget{
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
          // 左上の緑の円
@@ -163,8 +166,7 @@ class _LoginScreenState extends State<LoginScreen>{
                   ),
                   SizedBox(height: 20.h),
                   GoogleLoginButton(
-                    //⭐︎Todo Googleログイン処理
-                    onPressed: (){
+                    onPressed: () async {
                       
                     },
                   ),
@@ -197,3 +199,4 @@ class _LoginScreenState extends State<LoginScreen>{
     );
   }
 }
+
