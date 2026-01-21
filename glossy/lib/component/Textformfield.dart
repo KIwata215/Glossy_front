@@ -35,6 +35,7 @@ class _Username_Textformfield extends State<Username_Textformfield>{
           Container(
             width: widget.width,
             child: TextFormField(
+              keyboardType: TextInputType.text,
               autovalidateMode: AutovalidateMode.disabled,
               validator: ValidateText.username,
               controller: widget.controller,
@@ -84,6 +85,7 @@ class _Email_Textformfield extends State<Email_Textformfield>{
           Container(
             width: widget.width,
             child: TextFormField(
+              keyboardType: TextInputType.emailAddress,
               autovalidateMode: AutovalidateMode.disabled,
               validator: ValidateText.email,
               controller: widget.controller,
@@ -136,6 +138,7 @@ class _Password_Textformfield extends State<Password_Textformfield>{
             child: Column(
               children: [
                 TextFormField(
+                  keyboardType: TextInputType.text,
                   obscureText: true,
                   autovalidateMode: AutovalidateMode.disabled,
                   validator: ValidateText.password,
