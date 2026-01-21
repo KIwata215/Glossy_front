@@ -79,7 +79,7 @@ class _ItemCardState extends State<ItemCard> {
                     child: Icon(
                       isFavorite ? Icons.favorite : Icons.favorite_border,
                       size: 18,
-                      color: const Color(0xFFE3D0E2), // ON も OFF もこの色
+                      color: const Color(0xFFE3D0E2),
                     ),
                   ),
                 ],
@@ -96,7 +96,7 @@ class _ItemCardState extends State<ItemCard> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 10.6,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1C331D),
                 ),
