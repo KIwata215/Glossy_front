@@ -17,7 +17,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     final item =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    const double rating = 5.0;
+    // 例：item['rating']がなければ5.0を仮で使う
+    final double rating = item?['rating']?.toDouble() ?? 5.0;
 
     if (item == null) {
       return Scaffold(
@@ -96,10 +97,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Container(
+                  child: Image.network(
+                    item['imageUrl'] ?? '', // ← 商品画像をitemから取得
                     width: 250,
                     height: 250,
-                    color: Colors.grey[300],
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -117,14 +119,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  ...List.generate(
-                    5,
-                        (_) => const Icon(
-                      Icons.star,
-                      color: Color(0xFFDDB867),
-                      size: 20,
-                    ),
-                  ),
+                  ...List.generate(5, (index) {
+                    final starValue = index + 1;
+                    if (rating >= starValue) {
+                      return const Icon(Icons.star, color: Color(0xFFDDB867), size: 20);
+                    } else if (rating >= starValue - 0.5) {
+                      return const Icon(Icons.star_half, color: Color(0xFFDDB867), size: 20);
+                    } else {
+                      return const Icon(Icons.star_border, color: Color(0xFFDDB867), size: 20);
+                    }
+                  }),
                   const Spacer(),
                   Icon(
                     isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -135,9 +139,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
               const SizedBox(height: 12),
 
-              const Text(
-                'ブランド名',
-                style: TextStyle(
+              Text(
+                item['brand'] ?? 'ブランド名', // ← ブランド名もitemから取得
+                style: const TextStyle(
                   color: Color(0xFFE3D0E2),
                   fontWeight: FontWeight.w600,
                 ),
@@ -146,7 +150,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               const SizedBox(height: 6),
 
               Text(
-                item['name'],
+                item['name'] ?? '', // ← 商品名もitemから取得
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
