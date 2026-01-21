@@ -8,6 +8,7 @@ import 'package:glossy/ui/home_screen/Home_Screen.dart';
 import 'package:glossy/ui/itemdetail_screen/itemdetail_screen.dart';
 import 'package:glossy/ui/login_screen/Login_Screen.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
+import 'package:glossy/ui/search_screen/serch_screen.dart';
 import 'package:glossy/ui/shopping_screen/shopping_screen.dart';
 
 Future<void> main() async {
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
             '/favorite': (context) => FavoriteScreen(),
             '/itemdetail': (context) => ItemDetailScreen(),
             '/profile': (context) =>  Profile_Screen(),
+            '/search': (context) =>  SearchScreen(),
           },
           debugShowCheckedModeBanner: false,
           theme:ThemeData(
