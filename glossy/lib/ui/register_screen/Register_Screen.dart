@@ -205,8 +205,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         password: password_controller.text
                       );
                       await registerUser(
+                        userId: auth.currentUser!.uid,
+                        name: username_controller.text,
                         email: email_controller.text,
-                        username: username_controller.text,
                         gender: selectedGender!,
                         hairType: selectedHairType!,
                         isHairdresser: selectedRole!,
@@ -238,32 +239,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
 }
 
 Future<void> registerUser({
+  required String userId,
+  required String name,
   required String email,
-  required String username,
   required String gender,
   required String hairType,
   required String isHairdresser,
 }) async {
-  try {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .set({
-      "user_id": uid,
-      "name": username,
-      "email": email,
-      "bio": "",
-      "gender_cd": gender == "男性",
-      "hair_type": hairType,
-      "icon_url": "",
-      "role": isHairdresser == "はい",
-      "createdAt": FieldValue.serverTimestamp(),
-    });
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    print("登録成功！");
-  } catch (e) {
-    print("Firestore エラー: $e");
-    rethrow;
-  }
-}   
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .set({
+    "user_id": userId,              // guest_01 や uid
+    "name": name,                   // ゲスト1
+    "email": email,                 // "" or email
+    "bio": "",
+    "gender_cd": gender == "男性",  // bool
+    "hair_type": hairType,          // "" or 選択値
+    "icon_url": "",
+    "role": isHairdresser == "はい",
+  });
+}  
