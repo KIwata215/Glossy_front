@@ -15,9 +15,7 @@ class UseItemScreen extends StatefulWidget {
 class _UseItemScreenState extends State<UseItemScreen> {
   int selectedCategory = 2; // 初期はスタイリング剤
   String searchKeyword = "";
-  String? selectedItem; // アイテムを選んだかどうか
-  String? selectedItemImage; //選択したアイテムの画像パス
-
+  List<Map<String, String>> selectedItems = [];
   // ⭐ ダミーデータ（後で楽天APIに差し替え）
   List<Map<String, String>> dummyItems = [
     {
@@ -98,13 +96,25 @@ class _UseItemScreenState extends State<UseItemScreen> {
                         ),
                     itemBuilder: (context, index) {
                       final item = dummyItems[index];
-                      final isSelected = selectedItem == item["name"];
+
+                      final isSelected = selectedItems.any(
+                        (e) => e['name'] == item['name'],
+                      );
 
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            selectedItem = item["name"];
-                            selectedItemImage = item["image"];
+                            final existsIndex = selectedItems.indexWhere(
+                              (e) => e['name'] == item['name'],
+                            );
+                            if (existsIndex >= 0) {
+                              selectedItems.removeAt(existsIndex);
+                            } else {
+                              selectedItems.add({
+                                'name': item['name']!,
+                                'image': item['image']!,
+                              });
+                            }
                           });
                         },
                         child: Column(
@@ -176,7 +186,7 @@ class _UseItemScreenState extends State<UseItemScreen> {
             /// ---------------------------
             /// 決定ボタン（アイテム選択時のみ表示）
             /// ---------------------------
-            if (selectedItem != null)
+            if (selectedItems.isNotEmpty)
               Positioned(
                 bottom: 20,
                 left: 0,
@@ -184,10 +194,7 @@ class _UseItemScreenState extends State<UseItemScreen> {
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context, {
-                        'name': selectedItem!,
-                        'image': selectedItemImage ?? '',
-                      });
+                      Navigator.pop(context, selectedItems);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
