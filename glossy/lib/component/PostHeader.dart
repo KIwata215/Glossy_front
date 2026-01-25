@@ -7,15 +7,20 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
   final String rightText;
   final Color textColor;
   final VoidCallback? onRightTap;
-  final Widget? child; // ← ★追加（検索バーなどを置ける）
+  final VoidCallback? onLeftTap;
+  final Color? leftIconColor;
+  final Widget? child;
+
   const PostHeader({
     super.key,
-    this.backgroundColor = const Color(0xFF2B2B2B),
+    this.backgroundColor = Colors.white,
     this.titleText = "新規投稿",
     this.rightText = "次へ",
     this.textColor = AppColors.custompurple,
     this.onRightTap,
+    this.onLeftTap,
     this.child,
+    this.leftIconColor,
   });
 
   @override
@@ -24,38 +29,43 @@ class PostHeader extends StatelessWidget implements PreferredSizeWidget {
       height: preferredSize.height,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(color: backgroundColor),
-      child: SafeArea(
-        child: child != null
-            ? child! // ← ★検索バーなどをそのまま表示
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: textColor,
-                      size: 20,
-                    ),
+
+      // ❌ SafeAreaを使わない
+      child:
+          child ??
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: onLeftTap ?? () => Navigator.of(context).pop(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: leftIconColor ?? textColor,
+                    size: 20,
                   ),
-                  Text(
-                    titleText ?? "",
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: onRightTap,
-                    child: Text(
-                      rightText ?? "",
-                      style: TextStyle(color: textColor, fontSize: 16),
-                    ),
-                  ),
-                ],
+                ),
               ),
-      ),
+
+              Text(
+                titleText,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              GestureDetector(
+                onTap: onRightTap,
+                child: Text(
+                  rightText,
+                  style: TextStyle(color: textColor, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../component/PostHeader.dart';
 import '../../res/Color.dart'; // AppColors
 import 'PostOverView_Screen.dart';
+import '../home_screen/Home_Screen.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -26,35 +27,31 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   // スマホから画像＋動画を取得
-Future<void> loadMedia() async {
-  final ps = await PhotoManager.requestPermissionExtend();
-  //写真のアクセスがない場合
-  if (!ps.isAuth) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('写真へのアクセスが許可されていません')),
+  Future<void> loadMedia() async {
+    final PermissionState ps = await PhotoManager.requestPermissionExtend();
+
+    if (ps.isAuth) {
+      // 全メディア（画像＋動画）取得
+      List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
+        onlyAll: true,
+        type: RequestType.all, // ← ★ここが重要
       );
-      Navigator.pop(context);
+
+      // 全メディアデータを取得
+      List<AssetEntity> media = await albums[0].getAssetListPaged(
+        page: 0,
+        size: 200,
+      );
+
+      setState(() {
+        mediaList = media;
+        // 初期選択を空のままにする（必要なら最初の1枚を選択する）
+        selectedMediaList = [];
+      });
+    } else {
+      PhotoManager.openSetting();
     }
-    return;
   }
-
-  final albums = await PhotoManager.getAssetPathList(
-    onlyAll: true,
-    type: RequestType.all,
-  );
-
-  final media = await albums.first.getAssetListPaged(
-    page: 0,
-    size: 200,
-  );
-
-  if (!mounted) return;
-
-  setState(() {
-    mediaList = media;
-  });
-}
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +64,7 @@ Future<void> loadMedia() async {
             backgroundColor: AppColors.customblack,
             titleText: "新規投稿",
             rightText: "次へ",
+            leftIconColor: AppColors.custompurple,
             textColor: AppColors.custompurple,
             onRightTap: () {
               // Navigator 実行前に渡す内容をログ
@@ -80,6 +78,12 @@ Future<void> loadMedia() async {
                     selectedMediaList: selectedMediaList, // ← 複数画像を送る
                   ),
                 ),
+              );
+            },
+            onLeftTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => HomeScreen()),
               );
             },
           ),
