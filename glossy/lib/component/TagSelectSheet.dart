@@ -24,7 +24,7 @@ class _TagSelect_SheetState extends State<TagSelect_Sheet> {
 
   Future<void> fetchTags() async {
     final url = Uri.parse(
-      'http://自分自身のIPアドレス:3000/tag/SByu7bVuFiTeWXUNfjmt', // ← 自分のIP
+      'http://192.168.0.7:3000/tag/SByu7bVuFiTeWXUNfjmt', // ← 自分のIP
     );
 
     try {

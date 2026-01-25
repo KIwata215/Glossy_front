@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 
 class SearchImagesGrid extends StatelessWidget {
   final List<String> imageUrls;
+  final void Function(int)? onImageTap;
 
-  const SearchImagesGrid({
-    Key? key,
-    required this.imageUrls,
-  }) : super(key: key);
+  const SearchImagesGrid({super.key, required this.imageUrls, this.onImageTap});
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(), // 外部ScrollView使う場合
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3, // 横3
         mainAxisSpacing: 4,
@@ -21,11 +19,15 @@ class SearchImagesGrid extends StatelessWidget {
       ),
       itemCount: imageUrls.length > 30 ? 30 : imageUrls.length, // 最大30枚
       itemBuilder: (context, index) {
-        return Container(
-          color: Colors.grey[200],
-          child: Image.network(
-            imageUrls[index],
-            fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: () {
+            if (onImageTap != null) {
+              onImageTap!(index); // タップ時にコールバック呼び出し
+            }
+          },
+          child: Container(
+            color: Colors.grey[200],
+            child: Image.asset(imageUrls[index], fit: BoxFit.cover),
           ),
         );
       },
