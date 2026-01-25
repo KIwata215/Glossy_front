@@ -7,6 +7,7 @@ import 'package:glossy/ui/itemdetail_screen/itemdetail_screen.dart';
 import 'package:glossy/ui/login_screen/Login_Screen.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
 import 'package:glossy/ui/shopping_screen/shopping_screen.dart';
+import 'package:glossy/ui/post_screen/Post_Screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,15 +19,15 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    const designSize =  Size(393, 852);
+    const designSize = Size(393, 852);
     return ScreenUtilInit(
       //元となる画面サイズ（iphone15)
-      designSize:designSize,
+      designSize: designSize,
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (_ ,child){
+      builder: (_, child) {
         return MaterialApp(
-          initialRoute: '/home',
+          initialRoute: '/post',
           routes: {
             '/login': (context) => LoginScreen(),
             'register': (context) => RegisterScreen(),
@@ -34,12 +35,11 @@ class MyApp extends StatelessWidget {
             '/shopping': (context) => ShoppingScreen(),
             '/favorite': (context) => const FavoriteScreen(),
             '/itemdetail': (context) => const ItemDetailScreen(),
+            '/post': (context) => const PostScreen(),
           },
           debugShowCheckedModeBanner: false,
-          theme:ThemeData(
-            useMaterial3: true,
-          ) ,
-          home:  HomeScreen(),
+          theme: ThemeData(useMaterial3: true),
+          home: PostScreen(),
           title: 'LoginPage',
         );
       },
