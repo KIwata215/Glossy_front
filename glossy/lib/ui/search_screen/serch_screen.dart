@@ -4,6 +4,7 @@ import 'package:glossy/component/AppBar.dart';
 import 'package:glossy/component/Search_images_grid.dart';
 import 'package:glossy/component/TagSelectSheet.dart';
 import 'package:glossy/router/AppRouter.dart';
+import 'package:glossy/ui/post_screen/PostDetail_Screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -21,11 +22,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   int selectedIndex = 1; // 検索画面なので初期値は1
 
-  // 仮の画像URLリスト（30件まで）
-  final List<String> imageUrls = List.generate(
-    30,
-    (index) => 'https://placehold.jp/150x150.png?text=Image${index + 1}',
-  );
+  // assets/images/thumbnail 内の実際にある3枚だけ
+  final List<String> imageUrls = [
+    'assets/images/thumbnail/スクリーンショット 2026-01-26 3.25.38.png',
+    'assets/images/thumbnail/スクリーンショット 2026-01-26 3.26.55.png',
+    'assets/images/thumbnail/スクリーンショット 2026-01-26 3.27.53.png',
+  ];
 
   void _showTagSheet() {
     showModalBottomSheet(
@@ -138,13 +140,34 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 8),
           const Divider(thickness: 1, color: Color(0xFF949494), height: 1),
           Expanded(
-            child: Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SingleChildScrollView(
-                  child: SearchImagesGrid(imageUrls: imageUrls),
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SearchImagesGrid(
+                imageUrls: imageUrls,
+                onImageTap: (index) {
+                  // タップした画像に応じて投稿IDを渡す
+                  String selectedId;
+                  switch (index) {
+                    case 0:
+                      selectedId = 'ID1';
+                      break;
+                    case 1:
+                      selectedId = 'ID2';
+                      break;
+                    case 2:
+                      selectedId = 'h6rDmfDFpr02XE60nlsU'; // 遷移したい画像
+                      break;
+                    default:
+                      selectedId = 'ID_DEFAULT';
+                  }
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PostDetailScreen(hairstyleId: selectedId),
+                    ),
+                  );
+                },
               ),
             ),
           ),
