@@ -52,19 +52,73 @@ class _TagSelect_SheetState extends State<TagSelect_Sheet> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView(
-                shrinkWrap: true,
-                children: categorizedTags.entries
-                    .where((e) => e.value.isNotEmpty)
-                    .map((entry) => _buildCategory(entry.key, entry.value))
-                    .toList(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildHeader(context),
+          const Divider(height: 1),
+
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView(
+                      shrinkWrap: true,
+                      children: categorizedTags.entries
+                          .where((e) => e.value.isNotEmpty)
+                          .map(
+                            (entry) => _buildCategory(entry.key, entry.value),
+                          )
+                          .toList(),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 中央タイトル（常に真ん中）
+          const Text(
+            'タグ選択',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+
+          // 左右ボタン
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: const Text(
+                  'キャンセル',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
               ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Text(
+                  '完了',
+                  style: TextStyle(
+                    color: AppColors.custompurple,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
