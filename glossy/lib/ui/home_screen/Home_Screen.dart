@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glossy/component/AppBar.dart';
-import 'package:glossy/component/Button.dart';
-import 'package:glossy/component/Seek_bar.dart';
+import 'package:glossy/data/dummy_data.dart';
 import 'package:glossy/res/Color.dart';
 import 'package:glossy/router/AppRouter.dart';
-import 'package:video_player/video_player.dart';
+import 'package:glossy/ui/home_screen/GenrePage.dart';
 
 class HomeScreen extends StatefulWidget{
   State<HomeScreen> createState() => _HomeScreenState();
@@ -57,33 +55,15 @@ class _HomeScreenState extends State<HomeScreen>{
           children: [
             GenrePage(
               genreName: 'レディース',
-              videoPaths: [
-                'assets/video/sample1_ledies.mp4',
-                'assets/video/sample2_ledies.mp4',
-                'assets/video/sample3_ledies.mp4',
-                'assets/video/sample4_ledies.mp4',
-                'assets/video/sample5_ledies.mp4',
-              ],
+              posts: ladiesPosts,
             ),
             GenrePage(
               genreName: 'フォロー中',
-              videoPaths: [
-                'assets/video/sample4_ledies.mp4',
-                'assets/video/sample2.mp4',
-                'assets/video/sample1_ledies.mp4',
-                'assets/video/sample2_ledies.mp4',
-                'assets/video/sample1.mp4',
-                'assets/video/sample3_ledies.mp4',
-                'assets/video/sample5_ledies.mp4',
-              ],
+              posts: followPosts,
             ),
             GenrePage(
               genreName: 'メンズ',
-              videoPaths: [
-                'assets/video/sample1.mp4',
-                'assets/video/sample2.mp4',
-                'assets/video/sample3.mp4',
-              ],
+              posts: mensPosts,
             ),
           ],
         ),
@@ -99,256 +79,256 @@ class _HomeScreenState extends State<HomeScreen>{
   }
 }
 
-class GenrePage extends StatefulWidget {
-  final List<String> videoPaths; // 動画ファイルのパスリスト
-  final String genreName; // レディース / メンズ など
+// class GenrePage extends StatefulWidget {
+//   final List<String> videoPaths; // 動画ファイルのパスリスト
+//   final String genreName; // レディース / メンズ など
 
-  const GenrePage({
-    super.key,
-    required this.videoPaths,
-    required this.genreName,
-  });
+//   const GenrePage({
+//     super.key,
+//     required this.videoPaths,
+//     required this.genreName,
+//   });
 
-  @override
-  State<GenrePage> createState() => _GenrePageState();
-}
+//   @override
+//   State<GenrePage> createState() => _GenrePageState();
+// }
 
-class _GenrePageState extends State<GenrePage> {
-  late final PageController _pageController;
-  int _currentIndex = 0;
-  final List<VideoPlayerController> _videoControllers = [];
-  bool _videosInitialized = false;
-  bool _isSeeking = false;
-  // _isDisposed フラグ
-  // dispose後の非同期処理を完全遮断
-  bool _isDisposed = false;
+// class _GenrePageState extends State<GenrePage> {
+//   late final PageController _pageController;
+//   int _currentIndex = 0;
+//   final List<VideoPlayerController> _videoControllers = [];
+//   bool _videosInitialized = false;
+//   bool _isSeeking = false;
+//   // _isDisposed フラグ
+//   // dispose後の非同期処理を完全遮断
+//   bool _isDisposed = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-    _initVideos();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _pageController = PageController();
+//     _initVideos();
+//   }
 
-  Future<void> _initVideos() async {
-    for (final path in widget.videoPaths) {
-      if (_isDisposed) return;
+//   Future<void> _initVideos() async {
+//     for (final path in widget.videoPaths) {
+//       if (_isDisposed) return;
 
-      final controller = VideoPlayerController.asset(path)..setLooping(true);
+//       final controller = VideoPlayerController.asset(path)..setLooping(true);
 
-      try {
-        await controller.initialize();
-      } catch (_) {
-        continue;
-      }
+//       try {
+//         await controller.initialize();
+//       } catch (_) {
+//         continue;
+//       }
 
-      if (_isDisposed) {
-        controller.dispose();
-        return;
-      }
+//       if (_isDisposed) {
+//         controller.dispose();
+//         return;
+//       }
 
-      controller.addListener(() {
-        if (!_isDisposed && mounted && !_isSeeking) {
-          setState(() {});
-        }
-      });
+//       controller.addListener(() {
+//         if (!_isDisposed && mounted && !_isSeeking) {
+//           setState(() {});
+//         }
+//       });
 
-      _videoControllers.add(controller);
-    }
+//       _videoControllers.add(controller);
+//     }
 
-    if (_isDisposed) return;
+//     if (_isDisposed) return;
 
-    if (_videoControllers.isNotEmpty &&
-        _videoControllers[0].value.isInitialized) {
-      await _videoControllers[0].play();
-    }
+//     if (_videoControllers.isNotEmpty &&
+//         _videoControllers[0].value.isInitialized) {
+//       await _videoControllers[0].play();
+//     }
 
-    if (mounted) setState(() => _videosInitialized = true);
-  }
+//     if (mounted) setState(() => _videosInitialized = true);
+//   }
 
-  @override
-  void dispose() {
-    _isDisposed = true;
-    for (final c in _videoControllers) {
-      c.dispose();
-    }
-    _pageController.dispose();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _isDisposed = true;
+//     for (final c in _videoControllers) {
+//       c.dispose();
+//     }
+//     _pageController.dispose();
+//     super.dispose();
+//   }
 
-  void _onPageChanged(int index) async {
-    if (_isDisposed || _videoControllers.isEmpty) return;
+//   void _onPageChanged(int index) async {
+//     if (_isDisposed || _videoControllers.isEmpty) return;
 
-    final prev = _videoControllers[_currentIndex];
-    if (prev.value.isInitialized) {
-      await prev.pause();
-    }
+//     final prev = _videoControllers[_currentIndex];
+//     if (prev.value.isInitialized) {
+//       await prev.pause();
+//     }
 
-    _currentIndex = index;
+//     _currentIndex = index;
 
-    final next = _videoControllers[_currentIndex];
-    if (!_isDisposed && next.value.isInitialized) {
-      await next.play();
-    }
-  }
+//     final next = _videoControllers[_currentIndex];
+//     if (!_isDisposed && next.value.isInitialized) {
+//       await next.play();
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: _pageController,
-      scrollDirection: Axis.vertical,
-      itemCount: widget.videoPaths.length,
-      onPageChanged: _onPageChanged,
-      itemBuilder: (context, index) {
-        if (!_videosInitialized || index >= _videoControllers.length) {
-          return const Center(child: CircularProgressIndicator());
-        }
+//   @override
+//   Widget build(BuildContext context) {
+//     return PageView.builder(
+//       controller: _pageController,
+//       scrollDirection: Axis.vertical,
+//       itemCount: widget.videoPaths.length,
+//       onPageChanged: _onPageChanged,
+//       itemBuilder: (context, index) {
+//         if (!_videosInitialized || index >= _videoControllers.length) {
+//           return const Center(child: CircularProgressIndicator());
+//         }
 
-        final controller = _videoControllers[index];
+//         final controller = _videoControllers[index];
 
-        if (!controller.value.isInitialized) {
-          return const Center(child: CircularProgressIndicator());
-        }
+//         if (!controller.value.isInitialized) {
+//           return const Center(child: CircularProgressIndicator());
+//         }
 
-        final duration = controller.value.duration;
-        final position = controller.value.position;
-        final isPlaying = controller.value.isPlaying;
+//         final duration = controller.value.duration;
+//         final position = controller.value.position;
+//         final isPlaying = controller.value.isPlaying;
 
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () async {
-            // タップで再生/一時停止切替
-            if (controller.value.isPlaying) {
-              controller.pause();
-            } else {
-              if (!controller.value.isInitialized) await controller.initialize();
-              controller.play();
-            }
-            if (mounted) setState(() {});
-          },
-          child: Stack(
-            children: [
-              // 背景を黒色に
-              Container(
-                color: const Color.fromARGB(255, 0, 0, 0),
-                child: Center(
-                  child: AspectRatio(
-                    aspectRatio: controller.value.aspectRatio,
-                    child: VideoPlayer(controller),
-                  ),
-                ),
-              ),
-              // 中央に一時停止アイコンを表示（停止中のみ）
-              if (!isPlaying)
-                Center(
-                  child: Icon(
-                    Icons.play_circle_fill,
-                    size: 72,
-                    color: Colors.white.withOpacity(0.9),
-                  ),
-                ),
+//         return GestureDetector(
+//           behavior: HitTestBehavior.opaque,
+//           onTap: () async {
+//             // タップで再生/一時停止切替
+//             if (controller.value.isPlaying) {
+//               controller.pause();
+//             } else {
+//               if (!controller.value.isInitialized) await controller.initialize();
+//               controller.play();
+//             }
+//             if (mounted) setState(() {});
+//           },
+//           child: Stack(
+//             children: [
+//               // 背景を黒色に
+//               Container(
+//                 color: const Color.fromARGB(255, 0, 0, 0),
+//                 child: Center(
+//                   child: AspectRatio(
+//                     aspectRatio: controller.value.aspectRatio,
+//                     child: VideoPlayer(controller),
+//                   ),
+//                 ),
+//               ),
+//               // 中央に一時停止アイコンを表示（停止中のみ）
+//               if (!isPlaying)
+//                 Center(
+//                   child: Icon(
+//                     Icons.play_circle_fill,
+//                     size: 72,
+//                     color: Colors.white.withOpacity(0.9),
+//                   ),
+//                 ),
 
-              // 右下インジケータ
-              Positioned(
-                right: 10.w,
-                bottom: 1.h,
-                child: Column(
-                  children: [
-                    Account_Button(
-                      onPressed: (){
-                      // アカウントボタンの処理
-                      }
-                    ),
-                    LikeButton(
-                      onPressed: (){
-                        // いいねボタンの処理
-                      }
-                    ),
-                    Comment_Button(
-                      onPressed: (){
-                        // コメントボタンの処理
-                      }
-                    ),
-                    Save_Button(
-                      onPressed: (){
-                        // 保存ボタンの処理
-                      }
-                    ),
-                    Share_Button(
-                      onPressed: (){
-                        // シェアボタンの処理
-                      }
-                    ),
-                  ],
-                ),
-              ),
-              // 左下：アカウント名＆説明文（TikTok風）
-              Positioned(
-                left: 12.w,
-                bottom: 40.h, // 再生バーの少し上
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // アカウント名
-                    Text(
-                      '@username',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            color: Colors.black.withOpacity(0.6),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
+//               // 右下インジケータ
+//               Positioned(
+//                 right: 10.w,
+//                 bottom: 1.h,
+//                 child: Column(
+//                   children: [
+//                     Account_Button(
+//                       onPressed: (){
+//                       // アカウントボタンの処理
+//                       }
+//                     ),
+//                     LikeButton(
+//                       onPressed: (){
+//                         // いいねボタンの処理
+//                       }
+//                     ),
+//                     Comment_Button(
+//                       onPressed: (){
+//                         // コメントボタンの処理
+//                       }
+//                     ),
+//                     Save_Button(
+//                       onPressed: (){
+//                         // 保存ボタンの処理
+//                       }
+//                     ),
+//                     Share_Button(
+//                       onPressed: (){
+//                         // シェアボタンの処理
+//                       }
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               // 左下：アカウント名＆説明文（TikTok風）
+//             Positioned(
+//               left: 12.w,
+//               bottom: 40.h, // 再生バーの少し上
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   // アカウント名
+//                   Text(
+//                     '@username',
+//                     style: TextStyle(
+//                       color: Colors.white,
+//                       fontSize: 14.sp,
+//                       fontWeight: FontWeight.bold,
+//                       shadows: [
+//                         Shadow(
+//                           offset: Offset(0, 1),
+//                           blurRadius: 4,
+//                           color: Colors.black.withOpacity(0.6),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   SizedBox(height: 6.h),
 
-                    // 説明文
-                    SizedBox(
-                      width: 260.w, // はみ出し防止
-                      child: Text(
-                        "テスト",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(0, 1),
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // 下部に再生コントロールとシークバー
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: TikTokProgressBar(controller: controller),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+//                   // 説明文
+//                   SizedBox(
+//                     width: 260.w, // はみ出し防止
+//                     child: Text(
+//                       'これはサンプルの説明文です。動画の内容を簡潔に説明します。',
+//                       maxLines: 2,
+//                       overflow: TextOverflow.ellipsis,
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 13.sp,
+//                         shadows: [
+//                           Shadow(
+//                             offset: Offset(0, 1),
+//                             blurRadius: 4,
+//                             color: Colors.black.withOpacity(0.6),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//               // 下部に再生コントロールとシークバー
+//               Positioned(
+//                 left: 0,
+//                 right: 0,
+//                 bottom: 0,
+//                 child: TikTokProgressBar(controller: controller),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
 
-  String _formatDuration(Duration? d) {
-    if (d == null) return '00:00';
-    final twoDigits = (int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(d.inMinutes.remainder(60));
-    final seconds = twoDigits(d.inSeconds.remainder(60));
-    return '$minutes:$seconds';
-  }
-}
+//   String _formatDuration(Duration? d) {
+//     if (d == null) return '00:00';
+//     final twoDigits = (int n) => n.toString().padLeft(2, '0');
+//     final minutes = twoDigits(d.inMinutes.remainder(60));
+//     final seconds = twoDigits(d.inSeconds.remainder(60));
+//     return '$minutes:$seconds';
+//   }
+// }

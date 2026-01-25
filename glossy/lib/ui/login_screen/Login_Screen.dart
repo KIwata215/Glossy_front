@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,9 +5,7 @@ import 'package:glossy/component/Button.dart';
 import 'package:glossy/component/Textformfield.dart';
 import 'package:glossy/res/Color.dart';
 import 'package:glossy/ui/home_screen/Home_Screen.dart';
-import 'package:glossy/ui/login_screen/GoogleLogin.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget{
   State<LoginScreen> createState() => _LoginScreenState();
