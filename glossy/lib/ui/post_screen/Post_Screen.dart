@@ -31,13 +31,11 @@ class _PostScreenState extends State<PostScreen> {
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
 
     if (ps.isAuth) {
-      // 全メディア（画像＋動画）取得
       List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
         onlyAll: true,
-        type: RequestType.all, // ← ★ここが重要
+        type: RequestType.all,
       );
 
-      // 全メディアデータを取得
       List<AssetEntity> media = await albums[0].getAssetListPaged(
         page: 0,
         size: 200,
@@ -45,8 +43,15 @@ class _PostScreenState extends State<PostScreen> {
 
       setState(() {
         mediaList = media;
-        // 初期選択を空のままにする（必要なら最初の1枚を選択する）
-        selectedMediaList = [];
+
+        // ⭐ ここが重要：最初の1件を自動選択
+        if (mediaList.isNotEmpty) {
+          selectedMediaList = [mediaList.first];
+          selectedMedia = mediaList.first;
+        } else {
+          selectedMediaList = [];
+          selectedMedia = null;
+        }
       });
     } else {
       PhotoManager.openSetting();
