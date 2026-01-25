@@ -10,7 +10,10 @@ import 'package:glossy/ui/login_screen/Login_Screen.dart';
 import 'package:glossy/ui/register_screen/Register_Screen.dart';
 import 'package:glossy/ui/search_screen/serch_screen.dart';
 import 'package:glossy/ui/shopping_screen/shopping_screen.dart';
+
 import 'package:glossy/ui/splash_screen/Splash_Screen.dart';
+
+import 'package:glossy/ui/search_history/search_history.dart'; // ← 追加
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
             '/itemdetail': (context) => ItemDetailScreen(),
             '/profile': (context) =>  Profile_Screen(),
             '/search': (context) =>  SearchScreen(),
+            '/search_history': (context) => SearchHistoryScreen(), // ★ 追加
           },
           debugShowCheckedModeBanner: false,
           theme:ThemeData(
