@@ -3,6 +3,7 @@ import 'package:glossy/component/SearchBar.dart' as glossy;
 import 'package:glossy/component/AppBar.dart';
 import 'package:glossy/component/Search_images_grid.dart';
 import 'package:glossy/component/TagSelectSheet.dart';
+import 'package:glossy/router/AppRouter.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -39,14 +40,13 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _executeSearch() {
-  final keyword = _searchController.text;
+    final keyword = _searchController.text;
 
-  debugPrint('検索キーワード: $keyword');
-  debugPrint('性別: ${isMaleSelected ? '男' : '女'}');
+    debugPrint('検索キーワード: $keyword');
+    debugPrint('性別: ${isMaleSelected ? '男' : '女'}');
 
-  // 🔽 ここで画像リストを絞り込む or API / Firestore
-}
-
+    // 🔽 ここで画像リストを絞り込む or API / Firestore
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,25 +62,24 @@ class _SearchScreenState extends State<SearchScreen> {
             Expanded(
               child: GestureDetector(
                 onTap: () async {
-                final result = await Navigator.pushNamed(
-                  context,
-                  '/search_history',
-                );
+                  final result = await Navigator.pushNamed(
+                    context,
+                    '/search_history',
+                  );
 
-                if (result != null && result is String) {
-                  setState(() {
-                    _currentKeyword = result;
-                    _searchController.text = result;
-                  });
+                  if (result != null && result is String) {
+                    setState(() {
+                      _currentKeyword = result;
+                      _searchController.text = result;
+                    });
 
-                  _executeSearch();
-                }
-              },
+                    _executeSearch();
+                  }
+                },
 
-                child: AbsorbPointer( // TextFieldの編集を無効化（タップのみ反応）
-                  child: glossy.SearchBar(
-                    controller: _searchController,
-                  ),
+                child: AbsorbPointer(
+                  // TextFieldの編集を無効化（タップのみ反応）
+                  child: glossy.SearchBar(controller: _searchController),
                 ),
               ),
             ),
@@ -91,9 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
+          decoration: const BoxDecoration(color: Colors.white),
         ),
       ),
       body: Column(
@@ -139,11 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Divider(
-            thickness: 1,
-            color: Color(0xFF949494),
-            height: 1,
-          ),
+          const Divider(thickness: 1, color: Color(0xFF949494), height: 1),
           Expanded(
             child: Container(
               color: Colors.white,
@@ -157,13 +150,13 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBarCustom(
-        selectedIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
+      bottomNavigationBar: SafeArea(
+        child: BottomAppBarCustom(
+          selectedIndex: 1,
+          onTap: (index) {
+            AppRouter.navigate(context, 1, index);
+          },
+        ),
       ),
     );
   }
