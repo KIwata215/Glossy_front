@@ -99,6 +99,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 修正ポイント①: usedItems を null 安全に扱う
+    final List<dynamic> toolsList =
+        (postData?['usedItems'] ?? []) as List<dynamic>;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -129,7 +133,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           SizedBox(
                             height: 420,
                             child: Center(
-                              // ← ここで中央寄せ
                               child:
                                   postData!['video_url'] != null &&
                                       postData!['video_url'].isNotEmpty
@@ -161,7 +164,6 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 if (tags is List) {
                                   return tags.map<Widget>((tag) {
                                     return Chip(
-                                      // Textより見やすく
                                       label: Text(tag.toString()),
                                       backgroundColor: Colors.blue.shade50,
                                     );
@@ -202,33 +204,25 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
                           const SizedBox(height: 8),
 
-                          // ② Firebase tools データ表示
+                          // 修正ポイント②: toolsList を使用して表示
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child:
-                                (postData!['usedItems'] as List<dynamic>?)
-                                        ?.isNotEmpty ??
-                                    false
+                            child: toolsList.isNotEmpty
                                 ? SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
-                                      children:
-                                          (postData!['usedItems']
-                                                  as List<dynamic>)
-                                              .map((it) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        right: 12,
-                                                      ),
-                                                  child: _itemBox(
-                                                    it['name'] ?? '',
-                                                    "¥${it['money'] ?? 0}",
-                                                    imagePath: it['image'],
-                                                  ),
-                                                );
-                                              })
-                                              .toList(),
+                                      children: toolsList.map((it) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 12,
+                                          ),
+                                          child: _itemBox(
+                                            it['name'] ?? '',
+                                            "¥${it['money'] ?? 0}",
+                                            imagePath: it['image'],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
                                   )
                                 : const Center(child: Text("使用したアイテムはありません")),
@@ -256,6 +250,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
+  // 修正ポイント③: 名前の自動省略対応（maxLines + overflow）
   Widget _itemBox(String name, String price, {String? imagePath}) {
     Widget thumb;
 
@@ -272,7 +267,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ClipRRect(borderRadius: BorderRadius.circular(6), child: thumb),
         const SizedBox(height: 4),
         SizedBox(
-          width: 60,
+          width: 60, // ← 横幅固定で自動省略を有効化
           child: Text(
             name,
             maxLines: 1,
