@@ -12,6 +12,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _currentKeyword = '';
+
   // true: 男, false: 女
   bool isMaleSelected = true;
 
@@ -35,6 +38,16 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  void _executeSearch() {
+  final keyword = _searchController.text;
+
+  debugPrint('検索キーワード: $keyword');
+  debugPrint('性別: ${isMaleSelected ? '男' : '女'}');
+
+  // 🔽 ここで画像リストを絞り込む or API / Firestore
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +60,33 @@ class _SearchScreenState extends State<SearchScreen> {
         title: Row(
           children: [
             Expanded(
-              child: glossy.SearchBar(
-                onChanged: (value) {},
-                onSubmitted: (value) {},
+              child: GestureDetector(
+                onTap: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/search_history',
+                );
+
+                if (result != null && result is String) {
+                  setState(() {
+                    _currentKeyword = result;
+                    _searchController.text = result;
+                  });
+
+                  _executeSearch();
+                }
+              },
+
+                child: AbsorbPointer( // TextFieldの編集を無効化（タップのみ反応）
+                  child: glossy.SearchBar(
+                    controller: _searchController,
+                  ),
+                ),
               ),
             ),
             IconButton(
               icon: const Icon(Icons.filter_list, color: Colors.black),
-              onPressed: _showTagSheet, // ← ここでタグシートを表示
+              onPressed: _showTagSheet,
             ),
           ],
         ),
