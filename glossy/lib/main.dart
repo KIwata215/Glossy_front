@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ) ,
           home:  SplashScreen(),
-          title: 'LoginPage',
+          title: 'ログインしているかどうかで画面遷移を変える' ,
         );
       },
     );
